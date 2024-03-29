@@ -66,7 +66,8 @@ export default function VanityForm() {
             } catch ( error ) {
               setVanitySuccess(false);
               console.error(  error );
-              setErrMsg( (error as any).response.errors[0].message  )
+              const errMsg = (error as any).response.errors[0].message;
+              setErrMsg(  typeof(errMsg) === "string" ? errMsg : "unknown reason. Please reach out to an admin for assistance." );
             }
             
             handlePopUp(); 

@@ -1,6 +1,3 @@
-// import { StartExecutionCommand } from '@aws-sdk/client-sfn';
-// import { createStepFunctionInstance } from '../aws/setup';
-// import { v4 as uuid } from 'uuid';
 import axios from 'axios';
 
 interface Vanity {
@@ -27,15 +24,7 @@ interface VanityLinkPayload {
 }
 
 export async function generateVanityLink(payload: VanityLinkPayload) {
-  // Depreciate step function 
 
-  // const stepFunction = createStepFunctionInstance();
-
-  // return stepFunction.send(new StartExecutionCommand({
-  //   stateMachineArn: process.env.VANITY_ARN!,
-  //   name: uuid(),
-  //   input: JSON.stringify(payload),
-  // }));
   const { destination, primaryDomain, subdomain, slashtag } = payload;
 
   const vanityData: Vanity = { destination, primaryDomain, slashtag, subdomain };
