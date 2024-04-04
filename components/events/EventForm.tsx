@@ -124,6 +124,7 @@ export default function EventForm({
             <DateTimePickerWrapper
               register={register}
               setValue={setValue}
+              value={eventForm.start}
               name="start"
               label="Event Start Date"
               renderInput={(params) => (
@@ -141,6 +142,7 @@ export default function EventForm({
             <DateTimePickerWrapper
               register={register}
               setValue={setValue}
+              value={eventForm.end}
               name="end"
               label="Event End Date"
               renderInput={(params) => (

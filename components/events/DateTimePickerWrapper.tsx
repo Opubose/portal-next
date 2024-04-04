@@ -12,6 +12,7 @@ interface DateTimePickerWrapperProps {
   label: string;
   renderInput: (props: TextFieldProps) => ReactElement<any, string | JSXElementConstructor<any>>;
   minDate?: string;
+  value?: string;
 }
 
 export default function DateTimePickerWrapper({
@@ -21,6 +22,7 @@ export default function DateTimePickerWrapper({
   renderInput,
   label,
   minDate,
+  value,
 }: DateTimePickerWrapperProps) {
   useEffect(() => {
     register(name);
@@ -31,7 +33,9 @@ export default function DateTimePickerWrapper({
   }, [date]);
 
   useEffect(() => {
-    if (!minDate) {
+    if (value) {
+      setDate(value);
+    } else if (!minDate) {
       setDate(new Date().toISOString());
     } else if (new Date(minDate).getTime() > new Date(date).getTime()) {
       setDate(minDate);
