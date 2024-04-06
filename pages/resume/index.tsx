@@ -3,7 +3,7 @@ import axios from 'axios';
 import contentDisposition from 'content-disposition';
 import mime from 'mime-types';
 import { useSession } from 'next-auth/react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import Button from 'components/Button';
 import CircularBlur from 'components/CircularBlur';
 import DocumentIcon from 'icons/DocumentIcon';
@@ -15,22 +15,20 @@ export default function ResumePage() {
   const [uploadReady, setUploadReady] = useState(false);
   const uploadRef = useRef<HTMLInputElement | null>(null);
   const { data: session, status } = useSession({ required: true });
+
   const {
     data,
     isLoading,
     refetch: refetchResume,
-  } = useQuery(
-    ['resumeData'],
-    () =>
-      gqlQueries.getResumePageUserInfo({
-        where: {
-          userId: session?.id || '',
-        },
-      }),
-    {
-      enabled: status === 'authenticated',
+  } = useQuery({
+    queryKey: ['resumeData'],
+    queryFn: async () => {
+      return await gqlQueries.getResumePageUserInfo({
+        where: { userId: session?.id || '' },
+      });
     },
-  );
+    enabled: status === 'authenticated',
+  });
 
   const handleResumeUploadReady = useCallback(() => {
     if (!uploadRef.current || !uploadRef.current.files) return;

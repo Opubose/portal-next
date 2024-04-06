@@ -44,12 +44,7 @@ export default function HomePage({ profileVisited }: { profileVisited: boolean }
     return <Loading />;
   }
 
-  if (!session)
-    return (
-      <Link href="/auth/signin" passHref>
-        Sign In
-      </Link>
-    );
+  if (!session) return <Link href="/auth/signin">Sign In</Link>;
 
   if (!profileVisited) {
     router.push('/profile'); // redirect user to set up profile if they haven't already

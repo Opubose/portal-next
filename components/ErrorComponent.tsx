@@ -1,25 +1,33 @@
-import { GraphQLError } from "graphql";
-import { useState } from "react";
+import { useState } from 'react';
 
 interface ErrorComponentProps {
   errorCode: string;
   errorMessage: string;
 }
 
-export default function ErrorComponent({ errorCode, errorMessage}: ErrorComponentProps) {
-  let customErrorCode: string[] = ['LOGIN_REQUIRED', 'NETID_EXISTS', 'PROFILE_CREATION_REQUIRED', 'ERROR_GENERATING_VANITY_LINK', 'OFFICER_PERMISSION_REQUIRED', 'OFFICER_PERMISSION_REQUIRED', 'INVALID_USER_FOUND', 'PROFILE_DOES_NOT_EXIST'];
+export default function ErrorComponent({ errorCode, errorMessage }: ErrorComponentProps) {
+  let customErrorCode: string[] = [
+    'LOGIN_REQUIRED',
+    'NETID_EXISTS',
+    'PROFILE_CREATION_REQUIRED',
+    'ERROR_GENERATING_VANITY_LINK',
+    'OFFICER_PERMISSION_REQUIRED',
+    'OFFICER_PERMISSION_REQUIRED',
+    'INVALID_USER_FOUND',
+    'PROFILE_DOES_NOT_EXIST',
+  ];
   let error: string;
   if (customErrorCode.includes(errorCode as string)) {
     error = errorCode as string;
   } else {
-    error = errorMessage
+    error = errorMessage;
   }
 
   const [showError, setShowError] = useState(true);
 
   const closeError = () => {
     setShowError(false);
-  }
+  };
 
   return (
     <>
