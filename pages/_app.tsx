@@ -5,14 +5,14 @@ import { SessionProvider } from 'next-auth/react';
 import Skeleton from '../components/Skeleton';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
-import { Hydrate, QueryClientProvider } from 'react-query';
+import { HydrationBoundary, QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from 'src/api';
 import Head from 'next/head';
 
 function MyApp({ Component, pageProps }: AppProps<any>) {
   return (
     <QueryClientProvider client={queryClient}>
-      <Hydrate state={pageProps.dehydratedState}>
+      <HydrationBoundary state={pageProps.dehydratedState}>
         <SessionProvider session={pageProps.session}>
           <LocalizationProvider dateAdapter={AdapterMoment}>
             <Skeleton>
@@ -23,7 +23,7 @@ function MyApp({ Component, pageProps }: AppProps<any>) {
             </Skeleton>
           </LocalizationProvider>
         </SessionProvider>
-      </Hydrate>
+      </HydrationBoundary>
     </QueryClientProvider>
   );
 }

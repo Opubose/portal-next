@@ -1,10 +1,8 @@
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { gqlQueries } from 'src/api';
-
-import ACMButton from '../components/PortalButton';
 import { useEffect } from 'react';
 import { GetServerSideProps } from 'next';
 import { GraphQLError } from 'graphql';
@@ -24,16 +22,16 @@ export default function HomePage({ profileVisited }: { profileVisited: boolean }
   const { data: session, status } = useSession({ required: true });
   const router = useRouter();
 
-  const { data, error, isLoading } = useQuery(
-    ['homepageData'],
-    () =>
+  const { data, error, isLoading } = useQuery({
+    queryKey: ['homepageData'],
+    queryFn: () =>
       gqlQueries.getHomePageUserInfo({
         where: {
           userId: session?.id || '',
         },
       }),
-    { enabled: status === 'authenticated' },
-  );
+    enabled: status === 'authenticated',
+  });
 
   useEffect(() => {
     if (status === 'authenticated' && !profileVisited) {
@@ -41,20 +39,16 @@ export default function HomePage({ profileVisited }: { profileVisited: boolean }
     }
   }, [status]);
 
-  let pageTheme: any = 'dark';
+  let pageTheme = 'dark';
   if (status !== 'authenticated') {
     return <Loading />;
   }
 
   if (!session)
     return (
-      <>
-        <Link href="/auth/signin" passHref>
-          <ACMButton theme={pageTheme} gradientcolor="#4cb2e9">
-            Sign In
-          </ACMButton>
-        </Link>
-      </>
+      <Link href="/auth/signin" passHref>
+        Sign In
+      </Link>
     );
 
   if (!profileVisited) {
@@ -94,7 +88,7 @@ export default function HomePage({ profileVisited }: { profileVisited: boolean }
             <h1 className="text-white text-3xl font-medion ml-8"> {data.profile.netid} </h1>
           </div>
           <div className="my-5">
-            <ACMButton
+            <button
               onClick={() => {
                 gqlQueries
                   .migrateEvent({
@@ -103,11 +97,10 @@ export default function HomePage({ profileVisited }: { profileVisited: boolean }
                   })
                   .then(() => alert('Success'));
               }}
-              theme={pageTheme}
-              gradientcolor={'#4cb2e9'}
+              className="bg-none dark:text-white text-black text-2xl hover:scale-105 transition-all ease-in-out hover:shadow-[inset_13rem_0_0_0] hover:shadow-violet-400 duration-[300ms,600ms] w-52 py-2"
             >
               Migrate data
-            </ACMButton>
+            </button>
           </div>
         </div>
       </div>
@@ -137,15 +130,14 @@ export default function HomePage({ profileVisited }: { profileVisited: boolean }
           )}
         </div>
         <div className="w-fit ml-auto">
-          <ACMButton
+          <button
             onClick={() => {
               router.push('/events');
             }}
-            theme={pageTheme}
-            gradientcolor={'#4cb2e9'}
+            className="bg-none dark:text-white text-black text-2xl hover:scale-105 transition-all ease-in-out hover:shadow-[inset_13rem_0_0_0] hover:shadow-violet-400 duration-[300ms,600ms] w-52 py-2"
           >
             See more
-          </ACMButton>
+          </button>
         </div>
       </div>
     </>

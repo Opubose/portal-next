@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 interface ACMNavbarItemPropTypes {
   children?: React.ReactNode;
@@ -12,7 +13,7 @@ interface ACMNavbarItemPropTypes {
 }
 interface NextLinkForwardRefTypes {
   onClick?: React.MouseEventHandler<HTMLElement>;
-  href?: string;
+  href: string;
   // temporary attribute, moving to a state system in the next commits
 }
 
@@ -33,75 +34,37 @@ const StyledA = styled(motion.a)<ACMNavbarItemPropTypes>`
       : 'none'};
 `;
 
-const StyledLogo = styled(motion.a)`
-  position: relative;
-  overflow: hidden;
-  padding: 10px 0px;
+const NavbarItem: FC<ACMNavbarItemPropTypes & NextLinkForwardRefTypes> = ({
+  theme = 'dark',
+  $active = false,
+  isLogo = false,
+  onClick,
+  href,
+  ...props
+}) => {
+  const [hover, setHover] = useState<boolean>(false);
 
-  display: flex;
-  width: 90%;
-  justify-content: center;
-  place-items: center;
-  margin-top: -40%;
-`;
-
-const NavbarItem = React.forwardRef<
-  HTMLAnchorElement,
-  ACMNavbarItemPropTypes & NextLinkForwardRefTypes
->(
-  (
-    {
-      theme = 'dark',
-      $active = false,
-      isLogo = false,
-
-      onClick,
-      href,
-
-      ...props
-    },
-    ref,
-  ): JSX.Element => {
-    const [hover, setHover] = useState<boolean>(false);
-
-    if (isLogo)
-      return (
-        <StyledLogo
-          href={href}
-          onClick={onClick}
-          ref={ref}
-          type="button"
-          onHoverStart={() => setHover(true)}
-          onHoverEnd={() => setHover(false)}
-        >
-          {props.children}
-        </StyledLogo>
-      );
-
+  if (isLogo)
     return (
-      <StyledA
+      <Link
         href={href}
-        onClick={onClick}
-        ref={ref}
-        theme={theme}
-        type="button"
-        onHoverStart={() => setHover(true)}
-        onHoverEnd={() => setHover(false)}
-        $active={$active}
+        className="relative overflow-hidden px-10 flex w-[90%] justify-center place-items-center -mt-[40%]"
       >
-        <motion.div
-          style={{ position: 'relative', zIndex: 999, paddingLeft: '5%' }}
-          animate={{
-            scale: hover ? 1.2 : 1,
-            x: hover ? 30 : 0,
-            transition: { type: 'spring', duration: 0.2 },
-          }}
-        >
-          {props.children}
-        </motion.div>
-      </StyledA>
+        {props.children}
+      </Link>
     );
-  },
-);
+
+  return (
+    <Link
+      href={href}
+      type="button"
+      className={`relative overflow-hidden py-3 px-5 w-full text-dark dark:text-white text-4xl transition-all ease-in-out transform ease-in-out$ hover:scale-125 hover:translate-x-3 ${
+        $active ? 'bg-gradient-to-r from-[#E10087] to-[#4004C0] scale-105' : ''
+      }`}
+    >
+      {props.children}
+    </Link>
+  );
+};
 
 export default NavbarItem;
