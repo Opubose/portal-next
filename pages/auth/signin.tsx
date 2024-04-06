@@ -1,4 +1,3 @@
-import ACMButton from 'components/PortalButton';
 import { GetServerSideProps } from 'next';
 import { BuiltInProviderType } from 'next-auth/providers';
 import Image from 'next/image';
@@ -10,7 +9,6 @@ import {
   useSession,
 } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 
 interface SignInPageProps {
   providers: Record<LiteralUnion<BuiltInProviderType, string>, ClientSafeProvider>;
