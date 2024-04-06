@@ -2,7 +2,7 @@ import LoadingComponent from 'components/LoadingComponent';
 import { GetAddOfficerPageDataQuery } from 'lib/generated/graphql';
 import { useSession } from 'next-auth/react';
 import { useContext, useEffect, useMemo, useState } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { gqlQueries } from 'src/api';
 import debounce from 'lodash.debounce';
 import MakeUserOfficerCard from 'components/admin/MakeUserOfficerCard';
@@ -12,16 +12,17 @@ import AdminOnlyComponent from 'components/admin/AdminOnly';
 
 export default function AddOfficerPage() {
   // Need to get logged in user profile
-  const { status, data: signedInUserData } = useSession({ required: true });
+  const { status } = useSession({ required: true });
   const officerStatusData = useContext(OfficerStatusContext);
-  const router = useRouter();
-  const { data, error, isLoading } = useQuery(
-    ['addOfficerPage'],
-    () => gqlQueries.getAddOfficerPageData(),
-    { enabled: status === 'authenticated' && officerStatusData.isOfficer },
-  );
+  const { data, isLoading } = useQuery({
+    queryKey: ['addOfficerPage'],
+    queryFn: () => gqlQueries.getAddOfficerPageData(),
+    enabled: status === 'authenticated' && officerStatusData.isOfficer,
+  });
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [profiles, setProfiles] = useState<GetAddOfficerPageDataQuery['officerEligibleProfiles']>([]);
+  const [profiles, setProfiles] = useState<GetAddOfficerPageDataQuery['officerEligibleProfiles']>(
+    [],
+  );
   let filteredProfiles = profiles;
   if (searchQuery !== '') {
     filteredProfiles = profiles.filter(
@@ -51,9 +52,7 @@ export default function AddOfficerPage() {
   });
 
   if (isLoading) return <LoadingComponent />;
-  if (!officerStatusData.isOfficer) {
-    return <AdminOnlyComponent />;
-  }
+  if (!officerStatusData.isOfficer) return <AdminOnlyComponent />;
 
   return (
     <div className="p-5">
