@@ -1,27 +1,10 @@
 import { useForm, Controller } from 'react-hook-form';
-import { VanityLink, CreateOneVanityLinkArgs } from '@generated/type-graphql';
-import { motion } from 'framer-motion';
-import styled from 'styled-components';
+import { VanityLink } from '@generated/type-graphql';
 import { gqlQueries } from 'src/api';
-import VanityPopUp  from './VanityPopUp';
+import VanityPopUp from './VanityPopUp';
 import { useState } from 'react';
 
-
 const vanityDomainOptions = ['content', 'survey', 'apply', 'rsvp', 'join'];
-
-const ActiveOptionButton = styled(motion.button)`
-  background: linear-gradient(90deg, transparent 0%, #3952d7 0%, #31d372 100%);
-`;
-
-const InactiveOptionButton = styled(motion.button)`
-  border: solid 2px transparent;
-  background-image: linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)),
-    linear-gradient(101deg, #3952d7, #31d372);
-  background-origin: border-box;
-  background-clip: content-box, border-box;
-  color: white;
-  box-shadow: 2px 1000px 1px rgb(24 24 27) inset;
-`;
 
 export default function VanityForm() {
   const { register, handleSubmit, control, setValue } = useForm<Omit<VanityLink, 'id'>>({
@@ -32,28 +15,26 @@ export default function VanityForm() {
 
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
   const [vanitySuccess, setVanitySuccess] = useState(false);
-  const [formData, setFormData] = useState<Omit<VanityLink, "id">>();
+  const [formData, setFormData] = useState<Omit<VanityLink, 'id'>>();
   const [errMsg, setErrMsg] = useState<string>();
 
   const handlePopUp = () => {
     setIsPopUpOpen(!isPopUpOpen);
-  }
+  };
 
   return (
     <div className="w-full grid place-items-center px-3 relative">
-
       <div className="flex flex-col p-10 place-items-center">
         <div className="text-3xl font-semibold text-gray-100">create a vanity link</div>
       </div>
       <div className="flex flex-col md:flex-row-reverse w-full md:w-[50%]">
-      <VanityPopUp 
-            vals = {formData} 
-            success={vanitySuccess}
-            errMsg = {errMsg}
-            isOpen={isPopUpOpen}
-            onClose={handlePopUp} 
-            
-      />
+        <VanityPopUp
+          vals={formData}
+          success={vanitySuccess}
+          errMsg={errMsg}
+          isOpen={isPopUpOpen}
+          onClose={handlePopUp}
+        />
         <form
           className="w-full"
           onSubmit={handleSubmit(async (vals) => {
@@ -63,18 +44,20 @@ export default function VanityForm() {
               });
               setFormData(vals);
               setVanitySuccess(true);
-            } catch ( error ) {
+            } catch (error) {
               setVanitySuccess(false);
-              console.error(  error );
+              console.error(error);
               const errMsg = (error as any).response.errors[0].message;
-              setErrMsg(  typeof(errMsg) === "string" ? errMsg : "unknown reason. Please reach out to an admin for assistance." );
+              setErrMsg(
+                typeof errMsg === 'string'
+                  ? errMsg
+                  : 'unknown reason. Please reach out to an admin for assistance.',
+              );
             }
-            
-            handlePopUp(); 
 
+            handlePopUp();
           })}
         >
-          
           <div className="flex flex-col gap-y-8">
             <div className="flex flex-col gap-y-2 w-full px-3 mb-6">
               <label className="text-2xl block text-gray-200 font-semibold mb-2">
@@ -100,33 +83,20 @@ export default function VanityForm() {
                 control={control}
                 render={({ field }) => (
                   <div className="flex gap-x-3">
-                    {vanityDomainOptions.map((option, idx) =>
-                      option === field.value ? (
-                        <ActiveOptionButton
-                          onClick={() => {
-                            setValue('vanityDomain', option);
-                          }}
-                          type="button"
-                          key={idx}
-                          className="rounded-lg p-2 text-white"
-                          whileHover={{ scale: 1.1 }}
-                        >
-                          {option}
-                        </ActiveOptionButton>
-                      ) : (
-                        <InactiveOptionButton
-                          onClick={() => {
-                            setValue('vanityDomain', option);
-                          }}
-                          type="button"
-                          key={idx}
-                          className="p-2 text-white rounded-lg"
-                          whileHover={{ scale: 1.1 }}
-                        >
-                          {option}
-                        </InactiveOptionButton>
-                      ),
-                    )}
+                    {vanityDomainOptions.map((option, idx) => (
+                      <button
+                        onClick={() => setValue('vanityDomain', option)}
+                        type="button"
+                        key={idx}
+                        className={`p-2 text-white rounded-lg transition-all duration-300 ease-in-out bg-gradient-to-r ${
+                          option === field.value
+                            ? 'from-[#3952d7] to-[#31d372]'
+                            : 'bg-transparent border border-gray-600'
+                        } transform hover:scale-110`}
+                      >
+                        {option}
+                      </button>
+                    ))}
                   </div>
                 )}
               ></Controller>
