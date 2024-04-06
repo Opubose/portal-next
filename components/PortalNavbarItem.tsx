@@ -1,6 +1,4 @@
-import React, { FC, useState } from 'react';
-import styled from 'styled-components';
-import { motion } from 'framer-motion';
+import React, { FC } from 'react';
 import Link from 'next/link';
 
 interface ACMNavbarItemPropTypes {
@@ -16,24 +14,6 @@ interface NextLinkForwardRefTypes {
   href: string;
   // temporary attribute, moving to a state system in the next commits
 }
-
-const StyledA = styled(motion.a)<ACMNavbarItemPropTypes>`
-  position: relative;
-  overflow: hidden;
-  padding: 10px 0px;
-
-  width: 100%;
-  color: ${(props) => (props.theme === 'dark' ? 'white' : 'black')};
-  font-size: 36px;
-
-  background: ${(props) =>
-    props.$active
-      ? `linear-gradient(90deg,${props.color || '#E10087'} 0%,${
-          props.gradientColor || props.color || '#4004C0'
-        } 100%)`
-      : 'none'};
-`;
-
 const NavbarItem: FC<ACMNavbarItemPropTypes & NextLinkForwardRefTypes> = ({
   theme = 'dark',
   $active = false,
@@ -42,8 +22,6 @@ const NavbarItem: FC<ACMNavbarItemPropTypes & NextLinkForwardRefTypes> = ({
   href,
   ...props
 }) => {
-  const [hover, setHover] = useState<boolean>(false);
-
   if (isLogo)
     return (
       <Link
