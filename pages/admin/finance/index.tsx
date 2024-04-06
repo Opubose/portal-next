@@ -2,19 +2,21 @@ import Chart from 'chart.js/auto';
 import { useRef, useEffect, useContext } from 'react';
 import { useSession } from 'next-auth/react';
 import Loading from 'components/Loading';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { gqlQueries } from 'src/api';
 import { OfficerStatusContext } from 'components/context/OfficerStatus';
 import AdminOnlyComponent from 'components/admin/AdminOnly';
 
 export default function financePage() {
-  const { data, error, isLoading } = useQuery(['getFinanceData'], () =>
-    gqlQueries.getFinanceData(),
-  );
+  const { data, error, isLoading } = useQuery({
+    queryKey: ['getFinanceData'],
+    queryFn: async () => {
+      return await gqlQueries.getFinanceData();
+    },
+    enabled: true,
+  });
   const officerStatusData = useContext(OfficerStatusContext);
-  if (!officerStatusData.isOfficer) {
-    return <AdminOnlyComponent />;
-  }
+  if (!officerStatusData.isOfficer) return <AdminOnlyComponent />;
 
   const estimatedCanvas = useRef(null);
   const actualCanvas = useRef(null);
