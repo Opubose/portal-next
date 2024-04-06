@@ -7,7 +7,7 @@ import { NextPage } from 'next';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useContext } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { gqlQueries } from 'src/api';
 
 const EditApplicationPage: NextPage = () => {
@@ -15,18 +15,16 @@ const EditApplicationPage: NextPage = () => {
   const isOfficer = useContext(OfficerStatusContext);
   const { id } = router.query;
   const { status } = useSession({ required: true });
-  const { data, isLoading, error } = useQuery(
-    [`editSingleApp${id}`],
-    () =>
-      gqlQueries.findTypeformApplication({
-        where: {
-          id: {
-            equals: id! as string,
-          },
-        },
-      }),
-    { enabled: status === 'authenticated' },
-  );
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['editSingleApp', id],
+    queryFn: async () => {
+      return await gqlQueries.findTypeformApplication({
+        where: { id: { equals: id! as string } },
+      });
+    },
+    enabled: status === 'authenticated',
+  });
 
   if (!isOfficer) {
     return <AdminOnlyComponent />;

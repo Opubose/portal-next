@@ -4,7 +4,7 @@ import ApplicationCard from 'components/typeformApplicationSystem/ApplicationCar
 import { NextPage } from 'next';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import CircularBlur from '../../../components/CircularBlur';
 import { gqlQueries } from 'src/api';
 import ErrorComponent from 'components/ErrorComponent';
@@ -17,14 +17,14 @@ import Loading from 'components/Loading';
 const ApplicationsEditPage: NextPage = () => {
   const { status } = useSession({ required: true });
   const isOfficer = useContext(OfficerStatusContext);
-  const { data, isLoading, error } = useQuery(
-    ['editAppData'],
-    () =>
-      gqlQueries.getEditViewApplicationList(),
-    {
-      enabled: status === 'authenticated',
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['editAppData'],
+    queryFn: async () => {
+      return await gqlQueries.getEditViewApplicationList();
     },
-  );
+    enabled: status === 'authenticated',
+  });
+
   if (!isOfficer) return <AdminOnlyComponent />;
   if (isLoading || status == 'loading') return <Loading />;
   if (error)
