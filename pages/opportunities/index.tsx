@@ -3,7 +3,7 @@ import EmailToast from 'components/EmailToast';
 import { NextPage } from 'next';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { gqlQueries } from 'src/api';
 import { useRouter } from 'next/router';
 import ErrorComponent from 'components/ErrorComponent';
@@ -16,23 +16,22 @@ import Loading from 'components/Loading';
 const ApplicationsPage: NextPage = () => {
   const { status, data: signedInUserData } = useSession({ required: true });
   const router = useRouter();
-  const { data, error, isLoading } = useQuery(
-    ['applicationData'],
-    () =>
-      gqlQueries.getApplicationData({
+  const { data, error, isLoading } = useQuery({
+    queryKey: ['applicationData'],
+    queryFn: async () => {
+      return await gqlQueries.getApplicationData({
         where: {
           active: {
             equals: true,
           },
         },
-      }),
-    {
-      enabled: status === 'authenticated',
+      });
     },
-  );
+    enabled: status === 'authenticated',
+  });
 
   const [open, setOpen] = useState(false);
-  const [tabIndex, setTabIndex] = useState<number>(0);
+  const [tabIndex, setTabIndex] = useState(0);
   useEffect(() => {
     if (sessionStorage.getItem('showToast') == '1') {
       setOpen(true);
