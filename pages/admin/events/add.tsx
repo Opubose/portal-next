@@ -2,7 +2,7 @@ import EventForm from 'components/events/EventForm';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import { gqlQueries } from 'src/api';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import ErrorComponent from 'components/ErrorComponent';
 import { GraphQLError } from 'graphql/error';
 import Loading from 'components/Loading';
@@ -10,11 +10,11 @@ import Loading from 'components/Loading';
 export default function AddEventPage() {
   const router = useRouter();
   const { status } = useSession({ required: true });
-  const { data, isLoading, error } = useQuery(
-    ['eventAddData'],
-    () => gqlQueries.getUserOfficerStatusData(),
-    { enabled: status === 'authenticated' },
-  );
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['eventAddData'],
+    queryFn: () => gqlQueries.getUserOfficerStatusData(),
+    enabled: status === 'authenticated',
+  });
 
   if (isLoading || status == 'loading') return <Loading />;
   if (error) {

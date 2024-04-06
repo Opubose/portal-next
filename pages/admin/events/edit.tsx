@@ -11,7 +11,7 @@ import { useContext, useState } from 'react';
 import EventForm from 'components/events/EventForm';
 import { useSession } from 'next-auth/react';
 import { gqlQueries } from 'src/api';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { GetAdminEventDataQuery, SortOrder } from 'lib/generated/graphql';
 import ErrorComponent from 'components/ErrorComponent';
 import { GraphQLError } from 'graphql/error';
@@ -22,22 +22,19 @@ import AdminOnlyComponent from 'components/admin/AdminOnly';
 export default function EventPage() {
   const { status } = useSession({ required: true });
   const officerData = useContext(OfficerStatusContext);
-  const { data, isLoading, error } = useQuery(
-    ['adminEventsData'],
-    () => gqlQueries.getAdminEventData({
-      orderBy: [
-        {
-          end: SortOrder.Desc
-        }
-      ],
-      take: 10
-    }),
-    { enabled: status === 'authenticated' },
-  );
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['adminEventsData'],
+    queryFn: () =>
+      gqlQueries.getAdminEventData({
+        orderBy: [{ end: SortOrder.Desc }],
+        take: 10,
+      }),
+    enabled: status === 'authenticated',
+  });
 
-  const [currentEvent, setCurrentEvent] = useState<
-    GetAdminEventDataQuery['events'][0] | null
-  >(null);
+  const [currentEvent, setCurrentEvent] = useState<GetAdminEventDataQuery['events'][0] | null>(
+    null,
+  );
 
   if (!officerData.isOfficer) return <AdminOnlyComponent />;
 
@@ -53,55 +50,54 @@ export default function EventPage() {
   }
 
   if (currentEvent) {
-    return <EventForm
-      formAction="Edit"
-      onGoBack={() => setCurrentEvent(null)}
-      onDeleteEvent={async () => {
-        await gqlQueries.deleteEvent({ where: { id: currentEvent.id } });
-        setCurrentEvent(null);
-      }}
-      onFormSubmit={async (form) => {
-        await gqlQueries.updateEventData({
-          data: {
-            description: {
-              set: form.description,
+    return (
+      <EventForm
+        formAction="Edit"
+        onGoBack={() => setCurrentEvent(null)}
+        onDeleteEvent={async () => {
+          await gqlQueries.deleteEvent({ where: { id: currentEvent.id } });
+          setCurrentEvent(null);
+        }}
+        onFormSubmit={async (form) => {
+          await gqlQueries.updateEventData({
+            data: {
+              description: {
+                set: form.description,
+              },
+              summary: {
+                set: form.summary,
+              },
+              end: {
+                set: new Date(form.end),
+              },
+              location: {
+                set: form.location,
+              },
+              start: {
+                set: new Date(form.start),
+              },
+              url: {
+                set: form.url,
+              },
+              isPublic: {
+                set: form.isPublic,
+              },
             },
-            summary: {
-              set: form.summary,
+            where: {
+              id: currentEvent.id,
             },
-            end: {
-              set: new Date(form.end),
-            },
-            location: {
-              set: form.location,
-            },
-            start: {
-              set: new Date(form.start),
-            },
-            url: {
-              set: form.url,
-            },
-            isPublic: {
-              set: form.isPublic,
-            },
-          },
-          where: {
-            id: currentEvent.id,
-          },
-        });
-        alert('event updated');
-      }}
-      submitActionName="Save changes"
-      event={currentEvent}
-    />;
+          });
+          alert('event updated');
+        }}
+        submitActionName="Save changes"
+        event={currentEvent}
+      />
+    );
   }
 
   return (
     <div className="w-full text-white p-4">
-      <EventHeader
-        isInEditMode={true}
-        isOfficer={officerData.isOfficer}
-      />
+      <EventHeader isInEditMode={true} isOfficer={officerData.isOfficer} />
       <div className="flex flex-col gap-y-5">
         <EventSection
           sectionName="recent events"
