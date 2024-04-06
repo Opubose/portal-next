@@ -9,31 +9,24 @@ import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useContext } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { gqlQueries } from 'src/api';
 
 const ViewApplicationsPage: NextPage = () => {
   const router = useRouter();
   const isOfficer = useContext(OfficerStatusContext);
-  const { id } = router.query;
   const { status } = useSession({ required: true });
-  const { data, isLoading, error } = useQuery(
-    ['viewAllApps'],
-    () => gqlQueries.getApplicationAdminPageData(),
-    { enabled: status === 'authenticated' },
-  );
+  const { data, isLoading } = useQuery({
+    queryKey: ['viewAllApps'],
+    queryFn: () => gqlQueries.getApplicationAdminPageData(),
+    enabled: status === 'authenticated',
+  });
 
-  if (!isOfficer) {
-    return <AdminOnlyComponent />;
-  }
+  if (!isOfficer) return <AdminOnlyComponent />;
 
-  if (isLoading) {
-    return <LoadingComponent />;
-  }
+  if (isLoading) return <LoadingComponent />;
 
-  if (!data || !data.returnAllOpenApp) {
-    return <div>No application exists</div>;
-  }
+  if (!data || !data.returnAllOpenApp) return <div>No application exists</div>;
 
   return (
     <div className="w-full p-20">

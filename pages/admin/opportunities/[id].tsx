@@ -1,6 +1,5 @@
 import Button from 'components/Button';
 import LoadingComponent from 'components/LoadingComponent';
-import ACMButton from 'components/PortalButton';
 import AdminOnlyComponent from 'components/admin/AdminOnly';
 import OfficerApplicationForm from 'components/applications/OfficerApplicationForm';
 import { OfficerStatusContext } from 'components/context/OfficerStatus';
@@ -9,9 +8,8 @@ import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useContext, useState } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { gqlQueries } from 'src/api';
-
 
 const EditApplicationPage: NextPage = () => {
   const router = useRouter();
@@ -48,44 +46,45 @@ const EditApplicationPage: NextPage = () => {
     };
   };
   const [selected, setSelected] = useState<FilledAppData>();
-  const { data, isLoading, error } = useQuery(
-    [`manageSingleApp${id}`],
-    () =>
-      gqlQueries.findFilledApplications({
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['manageSingleApp', id],
+    queryFn: async () => {
+      return await gqlQueries.findFilledApplications({
         whereApp: {
           id: id! as string,
         },
-      }),
+      });
+    },
+    enabled: status === 'authenticated',
+  });
 
-    { enabled: status === 'authenticated' },
-  );
+  if (!isOfficer) return <AdminOnlyComponent />;
 
-  if (!isOfficer) {
-    return (
-      <AdminOnlyComponent />
-    );
-  }
-
-  if (isLoading) {
-    return <LoadingComponent></LoadingComponent>;
-  }
+  if (isLoading) return <LoadingComponent />;
 
   if (!data) {
     console.error(error);
-    return <div className="text-white text-lg">Something is wrong. Please try again later...</div>
+    return <div className="text-white text-lg">Something is wrong. Please try again later...</div>;
   }
 
   if (!data.application) {
-    return <div className='flex gap-y-2 flex-col rounded-lg mt-5 text-white text-lg p-5'>
-      <p>No application exists. Please make sure that the application id is correct and that you have appropriate access to this application</p>
-      <Link href="/admin/opportunities" passHref>
-        <Button>go back</Button>
-      </Link>
-    </div>
+    return (
+      <div className="flex gap-y-2 flex-col rounded-lg mt-5 text-white text-lg p-5">
+        <p>
+          No application exists. Please make sure that the application id is correct and that you
+          have appropriate access to this application
+        </p>
+        <Link href="/admin/opportunities" passHref>
+          <Button>go back</Button>
+        </Link>
+      </div>
+    );
   }
 
   if (!data?.application?.fillApplications) {
-    return <div className="text-white text-lg p-5">No applicants have submitted a response yet</div>;
+    return (
+      <div className="text-white text-lg p-5">No applicants have submitted a response yet</div>
+    );
   }
 
   // create function that filters list of applicants based on name, netid, year, status, and score
@@ -167,35 +166,35 @@ const EditApplicationPage: NextPage = () => {
               onChange={(e) => setFilterQueryNetID(e.target.value)}
             />
             <div className="mt-2 sm:flex-col gap-x-2">
-                <select
-                  className="rounded-3xl text-black"
-                  onChange={(e) => setYearSelected(e.target.value)}
-                >
-                  <option value="">class</option>
-                  <option value="freshman">freshman</option>
-                  <option value="sophomore">sophomore</option>
-                  <option value="junior">junior</option>
-                  <option value="senior">senior</option>
-                </select>
-                <select className="rounded-3xl" onChange={(e) => setStatusSelected(e.target.value)}>
-                  <option value="">status</option>
-                  <option value="pending">pending</option>
-                  <option value="accepted">accepted</option>
-                  <option value="notselected">not selected</option>
-                </select>
-                <select className="rounded-3xl" onChange={(e) => setScoreSelected(e.target.value)}>
-                  <option value="">score</option>
-                  <option value={1}>1</option>
-                  <option value={2}>2</option>
-                  <option value={3}>3</option>
-                  <option value={4}>4</option>
-                  <option value={5}>5</option>
-                </select>
+              <select
+                className="rounded-3xl text-black"
+                onChange={(e) => setYearSelected(e.target.value)}
+              >
+                <option value="">class</option>
+                <option value="freshman">freshman</option>
+                <option value="sophomore">sophomore</option>
+                <option value="junior">junior</option>
+                <option value="senior">senior</option>
+              </select>
+              <select className="rounded-3xl" onChange={(e) => setStatusSelected(e.target.value)}>
+                <option value="">status</option>
+                <option value="pending">pending</option>
+                <option value="accepted">accepted</option>
+                <option value="notselected">not selected</option>
+              </select>
+              <select className="rounded-3xl" onChange={(e) => setScoreSelected(e.target.value)}>
+                <option value="">score</option>
+                <option value={1}>1</option>
+                <option value={2}>2</option>
+                <option value={3}>3</option>
+                <option value={4}>4</option>
+                <option value={5}>5</option>
+              </select>
             </div>
             {/* List of applicants */}
             <p className="text-gray-100 text-xl my-5">Matching Applicants</p>
             {isLoading ? (
-              <LoadingComponent></LoadingComponent>
+              <LoadingComponent />
             ) : (
               <div>
                 {allFilters(data?.application?.fillApplications).map((filledApp, i) => (
@@ -270,13 +269,15 @@ const EditApplicationPage: NextPage = () => {
                 </div>
               )}
             </div>
-            <div style={{
-              marginTop: "3rem"
-            }}>
+            <div
+              style={{
+                marginTop: '3rem',
+              }}
+            >
               <label className="text-xl">Applicant Responses</label>
               <div>
                 {selected === undefined ? (
-                  <p className='mt-3'>No Applicant Selected</p>
+                  <p className="mt-3">No Applicant Selected</p>
                 ) : (
                   <div className="text-gray-100">
                     {selected.responses.map((response, i) => {
@@ -294,21 +295,15 @@ const EditApplicationPage: NextPage = () => {
           </div>
         </div>
       </div>
-      {selected !== undefined ? (
+      {selected !== undefined && (
         <div className="m-3 flex flex-row place-content-center">
-          <ACMButton
-            theme="dark"
-            onClick={() => {
-              if (selected !== undefined) {
-                setFormEditMode(!formEditMode);
-              }
-            }}
+          <button
+            onClick={() => setFormEditMode(!formEditMode)}
+            className="bg-none dark:text-white text-black text-2xl hover:scale-105 transition-all ease-in-out hover:shadow-[inset_13rem_0_0_0] hover:shadow-violet-400 duration-[300ms,600ms] w-52 py-2"
           >
             {formEditMode ? 'cancel' : 'edit'}
-          </ACMButton>
+          </button>
         </div>
-      ) : (
-        <div></div>
       )}
     </div>
   );
