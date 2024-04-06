@@ -9,10 +9,9 @@ import EventHeader from 'components/events/EventHeader';
 import EventSection from 'components/events/EventSection';
 import { useState } from 'react';
 import SingleEventView from 'components/events/SingleEventView';
-import EventForm from 'components/events/EventForm';
 import { useSession } from 'next-auth/react';
 import { gqlQueries } from 'src/api';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { GetEventPageUserInfoQuery } from 'lib/generated/graphql';
 import ErrorComponent from 'components/ErrorComponent';
 import { GraphQLError } from 'graphql/error';
@@ -20,11 +19,13 @@ import Loading from 'components/Loading';
 
 export default function EventPage() {
   const { status } = useSession({ required: true });
-  const { data, isLoading, error } = useQuery(
-    ['eventsData'],
-    () => gqlQueries.getEventPageUserInfo(),
-    { enabled: status === 'authenticated' },
-  );
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['eventsData'],
+    queryFn: async () => {
+      return await gqlQueries.getEventPageUserInfo();
+    },
+    enabled: status === 'authenticated',
+  });
 
   const [currentEvent, setCurrentEvent] = useState<
     GetEventPageUserInfoQuery['upcomingEvents'][0] | null
@@ -42,19 +43,18 @@ export default function EventPage() {
   }
 
   if (currentEvent) {
-    return <SingleEventView
+    return (
+      <SingleEventView
         onGoBack={() => setCurrentEvent(null)}
         event={currentEvent}
         isOfficer={data!.me.isOfficer}
-    />;
+      />
+    );
   }
 
   return (
     <div className="w-full text-white p-4">
-      <EventHeader
-        isInEditMode={false}
-        isOfficer={data!.me.isOfficer}
-      />
+      <EventHeader isInEditMode={false} isOfficer={data!.me.isOfficer} />
       <div className="flex flex-col gap-y-5">
         <EventSection
           sectionName="upcoming events"

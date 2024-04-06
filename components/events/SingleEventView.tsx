@@ -25,13 +25,12 @@ export default function SingleEventView({ event, isOfficer, onGoBack }: SingleEv
         </p>
         {isOfficer && (
           <>
-            <Link
-              className="whitespace-nowrap"
-              href={checkInLink}
-            >{`check in link: ${checkInLink}`}</Link>
+            <Link className="whitespace-nowrap" href={checkInLink}>
+              check in link: {checkInLink}
+            </Link>
 
             <Link className="whitespace-nowrap" href={`admin/events/${event.id}/qrcode`}>
-              {'Click to view QR Code'}
+              Click to view QR code
             </Link>
           </>
         )}
