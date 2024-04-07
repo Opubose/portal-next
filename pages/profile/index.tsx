@@ -20,6 +20,7 @@ import { useQuery } from 'react-query';
 import { GraphQLError } from 'graphql/error';
 import ErrorComponent from 'components/ErrorComponent';
 import Loading from 'components/Loading';
+import CameraIcon from '../../icons/CameraIcon';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { profileVisited } = ctx.req.cookies;
@@ -68,20 +69,36 @@ export default function ProfilePage({ profileVisited }: { profileVisited: boolea
       <div className="w-full grid place-items-center">
         <div className="flex flex-col p-10 place-items-center">
           <div className="text-[36px] font-semibold text-gray-100">my account</div>
-          <div className="m-3">
+          <div className="m-3 border border-2">
             <ACMButton
               theme="dark"
               onClick={() => {
                 setFormEditMode(!formEditMode);
               }}
             >
-              {formEditMode ? 'cancel' : 'edit'}
+              {formEditMode
+                ? 'cancel'
+                : `${data && data.profile && data.profile.firstName ? 'edit' : 'setup profile'}`}
             </ACMButton>
           </div>
         </div>
         <div className="flex flex-col md:flex-row-reverse w-full md:w-[50%]">
           <div className="flex flex-col place-items-center">
-            <img src="assets/acm/mrpeechi.png" alt="acm mascot" />
+            <img
+              src="assets/acm/mrpeechi.png"
+              alt="acm mascot"
+              className={`${formEditMode ? 'hidden' : ''} md:block`}
+            />
+            <div className="border border-2 my-2">
+              <Link href="/resume">
+                <ACMButton theme="dark">
+                  Resume
+                  <div className="pt-2 flex justify-center text-white">
+                    <CameraIcon fill={'#fff'} />
+                  </div>
+                </ACMButton>
+              </Link>
+            </div>
             {formEditMode && (
               <button
                 type="submit"
