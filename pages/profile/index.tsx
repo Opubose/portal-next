@@ -89,12 +89,12 @@ export default function ProfilePage({ profileVisited }: { profileVisited: boolea
               alt="acm mascot"
               className={`${formEditMode ? 'hidden' : ''} md:block`}
             />
-            <div className="border border-2 my-2">
+            <div className="flex items-center border border-2 my-2">
               <Link href="/resume">
                 <ACMButton theme="dark">
                   Resume
-                  <div className="pt-2 flex justify-center text-white">
-                    <CameraIcon fill={'#fff'} />
+                  <div className="inline-flex ml-4 text-white">
+                    <CameraIcon height="15" width="20" fill={'#fff'} />
                   </div>
                 </ACMButton>
               </Link>
