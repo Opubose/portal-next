@@ -1,6 +1,4 @@
-import { StartExecutionCommand } from '@aws-sdk/client-sfn';
-import { createStepFunctionInstance } from '../aws/setup';
-import { v4 as uuid } from 'uuid';
+import axios from "axios";
 
 interface SlackNotificationPayload {
   form_name: string;
@@ -10,11 +8,61 @@ interface SlackNotificationPayload {
   url?: string;
 }
 
-export async function sendSlackNotification(payload: SlackNotificationPayload) {
-  const stepFunction = createStepFunctionInstance();
-  return stepFunction.send(new StartExecutionCommand({
-    stateMachineArn: process.env.SLACK_ARN!,
-    name: uuid(),
-    input: JSON.stringify(payload),
-  }));
+export async function sendSlackNotification( msg : SlackNotificationPayload) {
+  const channelId = `${process.env.SLACK_WEBHOOK_PROJ_MEMBER_PORTAL!}`;
+  try {
+    const payload: { blocks: any[] } = {
+      blocks: [
+        {
+          type: 'section',
+          text: {
+            type: 'mrkdwn',
+            text: `Thanks for submitting the ${msg.form_name}! Your request has been processed & is now active.`,
+          },
+        },
+        {
+          type: 'divider',
+        },
+        {
+          type: 'section',
+          text: {
+            type: 'mrkdwn',
+            text: `${msg.message || '*Details*'}`,
+          },
+        },
+        {
+          type: 'section',
+          text: {
+            type: 'mrkdwn',
+            text: `User: ${msg.name}\nEmail: ${msg.email}`,
+          },
+        },
+      ],
+    };
+    if (msg.url) {
+      payload.blocks.push({
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: `Resource URL: ${msg.url}`,
+        },
+        accessory: {
+          type: 'button',
+          text: {
+            type: 'plain_text',
+            text: 'Visit Page',
+            emoji: true,
+          },
+          value: 'linked_url',
+          url: msg.url,
+          action_id: 'button-action',
+        },
+      });
+    }
+    await axios.post(channelId, payload);
+    return true;
+  } catch (error: any) {
+    console.error(JSON.stringify(error));
+    return false;
+  }
 }
