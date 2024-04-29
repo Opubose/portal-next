@@ -1,6 +1,6 @@
 import { sendEmail } from '../general';
 
-interface EventCreationSubstitutionsType {
+interface EventCreationSubstitutionsType extends Record<string, unknown> {
   first_name: string;
   last_name: string;
   name: string;

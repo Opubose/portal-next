@@ -1,6 +1,6 @@
 import { sendEmail } from '../general';
 
-interface ApplicationCreationSubstitutionsType {
+interface ApplicationCreationSubstitutionsType extends Record<string, unknown> {
   typeform_name: string;
   form_link: string;
   external_link: string;
@@ -9,7 +9,7 @@ interface ApplicationCreationSubstitutionsType {
   preheader?: string;
 }
 
-interface ApplicationSubmissionSubstitutionsType {
+interface ApplicationSubmissionSubstitutionsType extends Record<string, unknown>{
   first_name: string;
   last_name: string;
   typeform_id: string;
