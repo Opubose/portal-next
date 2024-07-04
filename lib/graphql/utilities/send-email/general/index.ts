@@ -1,25 +1,36 @@
-import { StartExecutionCommand } from '@aws-sdk/client-sfn';
-import { createStepFunctionInstance } from '../../aws/setup';
-import { v4 as uuid } from 'uuid';
+import sendgrid from "@sendgrid/mail"
 
-interface SendEmailPayload<SubstitutionsType> {
+interface SendEmailPayload<SubstitutionsType extends Record<string, unknown>> {
   template_id: string;
   dynamicSubstitutions: SubstitutionsType;
 }
 
-export async function sendEmail<SubstitutionsType>(
+export interface SendEmailConfig {
+  from: string;
+  from_name: string;
+  to: string;
+  template_id: string;
+  dynamicSubstitutions: Record<string, unknown>;
+}
+
+export async function sendEmail<SubstitutionsType extends Record<string, unknown>>(
   payload: SendEmailPayload<SubstitutionsType>,
   recipientEmail: string,
 ) {
-  const stepFunction = createStepFunctionInstance();
-  return stepFunction.send(new StartExecutionCommand({
-    stateMachineArn: process.env.SENDGRID_ARN!,
-    name: uuid(),
-    input: JSON.stringify({
-      ...payload,
-      from: 'development@acmutd.co',
-      from_name: 'ACM Development',
+    const msgConfig = {payload};
+
+    sendgrid.setApiKey(process.env.SENDGRID_APIKEY!);
+    const msg: sendgrid.MailDataRequired = {
+      from: {
+        email: "development@acmutd.co",
+        name: "ACM Development",
+      },
       to: recipientEmail,
-    })
-  }));
+      dynamicTemplateData: msgConfig.payload.dynamicSubstitutions,
+      templateId: msgConfig.payload.template_id,
+    };
+
+    return sendgrid.send(msg);
+
+
 }

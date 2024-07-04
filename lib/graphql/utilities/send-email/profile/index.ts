@@ -1,6 +1,6 @@
 import { sendEmail } from '../general';
 
-interface ProfileCreationSubstitutionsType {
+interface ProfileCreationSubstitutionsType extends Record<string, unknown> {
   first_name: string;
 }
 
