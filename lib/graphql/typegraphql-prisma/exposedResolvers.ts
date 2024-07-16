@@ -1,6 +1,8 @@
 import { NonEmptyArray } from 'type-graphql';
 
 import {
+  EventRelationsResolver,
+  EventReservationRelationsResolver,
   FindManyTypeformApplicationResolver,
   FindFirstTypeformApplicationResolver,
   CreateOneTypeformApplicationResolver,
@@ -15,7 +17,7 @@ import {
   FindUniqueProfileResolver,
   CreateOneVanityLinkResolver,
   UserRelationsResolver,
-  FindManyApplicationResolver, 
+  FindManyApplicationResolver,
   FindManyFilledApplicationResolver,
   ApplicationRelationsResolver,
   FilledApplicationRelationsResolver,
@@ -26,11 +28,13 @@ import {
   UpdateOneFilledApplicationResolver,
   CreateOneApplicationResolver,
   FindManyDivisionResolver,
-  UpdateOneOfficerResolver
+  UpdateOneOfficerResolver,
 } from '@generated/type-graphql';
 
 export const exposedResolvers: NonEmptyArray<Function> = [
   UserRelationsResolver,
+  EventRelationsResolver,
+  EventReservationRelationsResolver,
   FindManyTypeformApplicationResolver,
   FindFirstTypeformApplicationResolver,
   CreateOneTypeformApplicationResolver,
@@ -57,5 +61,5 @@ export const exposedResolvers: NonEmptyArray<Function> = [
   CreateOneApplicationResolver,
   FindManyDivisionResolver,
   FindManyEventResolver,
-  UpdateOneOfficerResolver
-];  
+  UpdateOneOfficerResolver,
+];
