@@ -58,6 +58,6 @@ export const resolversEnhanceMap: ResolversEnhanceMap = {
   Application: {
     application: [UseMiddleware(checkValidOfficer)]
   },
-  
+
 
 };

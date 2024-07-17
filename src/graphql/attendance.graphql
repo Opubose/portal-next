@@ -1,0 +1,15 @@
+query getAttendanceInfo {
+  events {
+    summary
+    description
+    location
+    start
+    end
+    profiles {
+      profile {
+        firstName
+        lastName
+      }
+    }
+  }
+}

@@ -14,19 +14,19 @@ export default function AdminToolsPage() {
       title: 'Create Vanity Link',
       description: 'Click here to start creating your Vanity URL with ACM domain.',
       onChosen: () => router.push('/admin/vanity'),
-      directorOnly: false
+      directorOnly: false,
     },
-    // {
-    //   title: 'Manage Division Application',
-    //   description: "Click here to manage your division(s)' applications.",
-    //   onChosen: () => router.push('/admin/opportunities'),
-    //   directorOnly: true
-    // },
+    {
+      title: 'View events statistics',
+      description: 'Click here to view participation metrics of ACM events.',
+      onChosen: () => router.push('/admin/events/stats'),
+      directorOnly: true,
+    },
     {
       title: 'Add officer to division',
       description: 'Add new officer into division.',
       onChosen: () => router.push('/admin/officer/add'),
-      directorOnly: true
+      directorOnly: true,
     },
     // {
     //   title: 'Create Division Application',
@@ -38,40 +38,42 @@ export default function AdminToolsPage() {
       title: 'Manage Typeform Application',
       description: 'Click here to manage all Typeform application',
       onChosen: () => router.push('/admin/typeform/'),
-      directorOnly: true
+      directorOnly: true,
     },
     {
       title: 'Add Event',
       description: 'Click here to create an event for your division(s)',
       onChosen: () => router.push('/admin/events/add'),
-      directorOnly: false
+      directorOnly: false,
     },
     {
-      title: "Edit Events",
-      description: "Click here to edit recent event data",
+      title: 'Edit Events',
+      description: 'Click here to edit recent event data',
       onChosen: () => router.push('/admin/events/edit'),
-      directorOnly: false
-    }
+      directorOnly: false,
+    },
   ];
   if (!officerStatusData.isOfficer) {
-    return <AdminOnlyComponent />
+    return <AdminOnlyComponent />;
   }
   return (
     <div className="p-4">
       <h1 className="text-[40px] text-white my-5 py-3">Admin Tools</h1>
       <div className="flex flex-col gap-y-6 w-full">
-        {options.filter(({ directorOnly }) => officerStatusData.isDirector ? true : !directorOnly).map(({ title, description, onChosen }, idx) => (
-          <div
-            key={idx}
-            className="mx-auto w-4/5 lg:h-40 p-6 rounded-3xl gap-y-4 flex flex-col justify-around bg-gray-200/5 outline outline-gray-100/10"
-          >
-            <h2 className="text-white font-bold text-xl">{title}</h2>
-            <p className="text-white">{description}</p>
-            <Button onClick={onChosen} className="ml-auto">
-              Select
-            </Button>
-          </div>
-        ))}
+        {options
+          .filter(({ directorOnly }) => (officerStatusData.isDirector ? true : !directorOnly))
+          .map(({ title, description, onChosen }, idx) => (
+            <div
+              key={idx}
+              className="mx-auto w-4/5 lg:h-40 p-6 rounded-3xl gap-y-4 flex flex-col justify-around bg-gray-200/5 outline outline-gray-100/10"
+            >
+              <h2 className="text-white font-bold text-xl">{title}</h2>
+              <p className="text-white">{description}</p>
+              <Button onClick={onChosen} className="ml-auto">
+                Select
+              </Button>
+            </div>
+          ))}
       </div>
     </div>
   );

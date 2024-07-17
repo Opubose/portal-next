@@ -998,9 +998,20 @@ export type Event = {
   id: Scalars['String']['output'];
   isPublic: Scalars['Boolean']['output'];
   location: Scalars['String']['output'];
+  profiles: Array<EventReservation>;
   start: Scalars['DateTimeISO']['output'];
   summary: Scalars['String']['output'];
   url: Scalars['String']['output'];
+};
+
+
+export type EventProfilesArgs = {
+  cursor?: InputMaybe<EventReservationWhereUniqueInput>;
+  distinct?: InputMaybe<Array<EventReservationScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<EventReservationOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<EventReservationWhereInput>;
 };
 
 export type EventCheckin = {
@@ -1077,8 +1088,10 @@ export type EventRelationFilter = {
 
 export type EventReservation = {
   __typename?: 'EventReservation';
+  event: Event;
   eventId: Scalars['String']['output'];
   id: Scalars['String']['output'];
+  profile: Profile;
   profileId: Scalars['String']['output'];
   status: Scalars['String']['output'];
 };
@@ -3380,6 +3393,11 @@ export type CreateApplicationMutationVariables = Exact<{
 
 export type CreateApplicationMutation = { __typename?: 'Mutation', createOneApplication: { __typename?: 'Application', id: string } };
 
+export type GetAttendanceInfoQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAttendanceInfoQuery = { __typename?: 'Query', events: Array<{ __typename?: 'Event', summary: string, description: string, location: string, start: any, end: any, profiles: Array<{ __typename?: 'EventReservation', profile: { __typename?: 'Profile', firstName: string, lastName: string } }> }> };
+
 export type CheckInToEventMutationVariables = Exact<{
   checkInData: EventCheckinInput;
 }>;
@@ -3661,6 +3679,23 @@ export const CreateApplicationDocument = gql`
     mutation createApplication($data: ApplicationCreateInput!) {
   createOneApplication(data: $data) {
     id
+  }
+}
+    `;
+export const GetAttendanceInfoDocument = gql`
+    query getAttendanceInfo {
+  events {
+    summary
+    description
+    location
+    start
+    end
+    profiles {
+      profile {
+        firstName
+        lastName
+      }
+    }
   }
 }
     `;
@@ -4077,6 +4112,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     createApplication(variables: CreateApplicationMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<CreateApplicationMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<CreateApplicationMutation>(CreateApplicationDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createApplication', 'mutation', variables);
+    },
+    getAttendanceInfo(variables?: GetAttendanceInfoQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetAttendanceInfoQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetAttendanceInfoQuery>(GetAttendanceInfoDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getAttendanceInfo', 'query', variables);
     },
     checkInToEvent(variables: CheckInToEventMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<CheckInToEventMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<CheckInToEventMutation>(CheckInToEventDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'checkInToEvent', 'mutation', variables);
