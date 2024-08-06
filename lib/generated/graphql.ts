@@ -567,9 +567,26 @@ export type Director = {
   __typename?: 'Director';
   _count?: Maybe<DirectorCount>;
   divisionIds: Array<Scalars['String']['output']>;
+  divisions: Array<Division>;
   dummy?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
+  officer?: Maybe<Officer>;
   officerId: Scalars['String']['output'];
+};
+
+
+export type DirectorDivisionsArgs = {
+  cursor?: InputMaybe<DivisionWhereUniqueInput>;
+  distinct?: InputMaybe<Array<DivisionScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<DivisionOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<DivisionWhereInput>;
+};
+
+
+export type DirectorOfficerArgs = {
+  where?: InputMaybe<OfficerWhereInput>;
 };
 
 export type DirectorCount = {
@@ -580,6 +597,13 @@ export type DirectorCount = {
 
 export type DirectorCountDivisionsArgs = {
   where?: InputMaybe<DivisionWhereInput>;
+};
+
+export type DirectorCreateInput = {
+  divisions?: InputMaybe<DivisionCreateNestedManyWithoutDirectorsInput>;
+  dummy?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  officer?: InputMaybe<OfficerCreateNestedOneWithoutDirectorInput>;
 };
 
 export type DirectorCreateNestedManyWithoutDivisionsInput = {
@@ -640,6 +664,13 @@ export type DirectorOrderByWithRelationInput = {
   officerId?: InputMaybe<SortOrder>;
 };
 
+export enum DirectorScalarFieldEnum {
+  DivisionIds = 'divisionIds',
+  Dummy = 'dummy',
+  Id = 'id',
+  OfficerId = 'officerId'
+}
+
 export type DirectorScalarWhereInput = {
   AND?: InputMaybe<Array<DirectorScalarWhereInput>>;
   NOT?: InputMaybe<Array<DirectorScalarWhereInput>>;
@@ -648,6 +679,12 @@ export type DirectorScalarWhereInput = {
   dummy?: InputMaybe<StringNullableFilter>;
   id?: InputMaybe<StringFilter>;
   officerId?: InputMaybe<StringFilter>;
+};
+
+export type DirectorUpdateInput = {
+  divisions?: InputMaybe<DivisionUpdateManyWithoutDirectorsNestedInput>;
+  dummy?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+  officer?: InputMaybe<OfficerUpdateOneWithoutDirectorNestedInput>;
 };
 
 export type DirectorUpdateManyMutationInput = {
@@ -1727,6 +1764,7 @@ export type Mutation = {
   createOneFilledApplication: FilledApplication;
   createOneTypeformApplication: TypeformApplication;
   createOneVanityLink: VanityLink;
+  deleteOneDirector?: Maybe<Director>;
   deleteOneEvent?: Maybe<Event>;
   deleteOneTypeformApplication?: Maybe<TypeformApplication>;
   transferFile: SignedUrl;
@@ -1734,6 +1772,7 @@ export type Mutation = {
   updateOneFilledApplication?: Maybe<FilledApplication>;
   updateOneOfficer?: Maybe<Officer>;
   updateOneTypeformApplication?: Maybe<TypeformApplication>;
+  upsertOneDirector: Director;
   upsertOneProfile: Profile;
 };
 
@@ -1779,6 +1818,11 @@ export type MutationCreateOneVanityLinkArgs = {
 };
 
 
+export type MutationDeleteOneDirectorArgs = {
+  where: DirectorWhereUniqueInput;
+};
+
+
 export type MutationDeleteOneEventArgs = {
   where: EventWhereUniqueInput;
 };
@@ -1815,6 +1859,13 @@ export type MutationUpdateOneOfficerArgs = {
 export type MutationUpdateOneTypeformApplicationArgs = {
   data: TypeformApplicationUpdateInput;
   where: TypeformApplicationWhereUniqueInput;
+};
+
+
+export type MutationUpsertOneDirectorArgs = {
+  create: DirectorCreateInput;
+  update: DirectorUpdateInput;
+  where: DirectorWhereUniqueInput;
 };
 
 
@@ -2027,6 +2078,13 @@ export type OfficerOrderByWithRelationInput = {
   profile?: InputMaybe<ProfileOrderByWithRelationInput>;
   profileId?: InputMaybe<SortOrder>;
 };
+
+export enum OfficerScalarFieldEnum {
+  DivisionIds = 'divisionIds',
+  Dummy = 'dummy',
+  Id = 'id',
+  ProfileId = 'profileId'
+}
 
 export type OfficerScalarWhereInput = {
   AND?: InputMaybe<Array<OfficerScalarWhereInput>>;
@@ -2561,6 +2619,8 @@ export type Query = {
   __typename?: 'Query';
   application?: Maybe<Application>;
   applications: Array<Application>;
+  directorEligibleOfficers: Array<Officer>;
+  directors: Array<Director>;
   divisions: Array<Division>;
   events: Array<Event>;
   filledApplications: Array<FilledApplication>;
@@ -2569,6 +2629,7 @@ export type Query = {
   getSpreadsheetOverviewRevenueData: Array<SpreadsheetOverviewRevenueType>;
   me: User;
   officerEligibleProfiles: Array<Profile>;
+  officers: Array<Officer>;
   profile?: Maybe<Profile>;
   returnAllOpenApp: Array<Application>;
   typeformApplications: Array<TypeformApplication>;
@@ -2588,6 +2649,16 @@ export type QueryApplicationsArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<ApplicationWhereInput>;
+};
+
+
+export type QueryDirectorsArgs = {
+  cursor?: InputMaybe<DirectorWhereUniqueInput>;
+  distinct?: InputMaybe<Array<DirectorScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<DirectorOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<DirectorWhereInput>;
 };
 
 
@@ -2628,6 +2699,16 @@ export type QueryFindFirstTypeformApplicationArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<TypeformApplicationWhereInput>;
+};
+
+
+export type QueryOfficersArgs = {
+  cursor?: InputMaybe<OfficerWhereUniqueInput>;
+  distinct?: InputMaybe<Array<OfficerScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<OfficerOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<OfficerWhereInput>;
 };
 
 
@@ -3410,6 +3491,32 @@ export type GetCheckInPageUserInfoQueryVariables = Exact<{ [key: string]: never;
 
 export type GetCheckInPageUserInfoQuery = { __typename?: 'Query', me: { __typename?: 'User', profile?: { __typename?: 'Profile', id: string } | null } };
 
+export type GetDirectorManagementPageInfoQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetDirectorManagementPageInfoQuery = { __typename?: 'Query', directors: Array<{ __typename?: 'Director', id: string, divisions: Array<{ __typename?: 'Division', deptName: string }>, officer?: { __typename?: 'Officer', profile: { __typename?: 'Profile', firstName: string, lastName: string } } | null }> };
+
+export type DeleteDirectorMutationVariables = Exact<{
+  where: DirectorWhereUniqueInput;
+}>;
+
+
+export type DeleteDirectorMutation = { __typename?: 'Mutation', deleteOneDirector?: { __typename?: 'Director', id: string } | null };
+
+export type GetAddDirectorPageInfoQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAddDirectorPageInfoQuery = { __typename?: 'Query', directorEligibleOfficers: Array<{ __typename?: 'Officer', id: string, profile: { __typename?: 'Profile', firstName: string, lastName: string } }>, me: { __typename?: 'User', profile?: { __typename?: 'Profile', officer?: { __typename?: 'Officer', divisions: Array<{ __typename?: 'Division', deptName: string, id: string }> } | null } | null } };
+
+export type AddNewDirectorMutationVariables = Exact<{
+  where: DirectorWhereUniqueInput;
+  create: DirectorCreateInput;
+  update: DirectorUpdateInput;
+}>;
+
+
+export type AddNewDirectorMutation = { __typename?: 'Mutation', upsertOneDirector: { __typename?: 'Director', id: string } };
+
 export type GetDivisionDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -3713,6 +3820,57 @@ export const GetCheckInPageUserInfoDocument = gql`
     profile {
       id
     }
+  }
+}
+    `;
+export const GetDirectorManagementPageInfoDocument = gql`
+    query getDirectorManagementPageInfo {
+  directors {
+    id
+    divisions {
+      deptName
+    }
+    officer {
+      profile {
+        firstName
+        lastName
+      }
+    }
+  }
+}
+    `;
+export const DeleteDirectorDocument = gql`
+    mutation deleteDirector($where: DirectorWhereUniqueInput!) {
+  deleteOneDirector(where: $where) {
+    id
+  }
+}
+    `;
+export const GetAddDirectorPageInfoDocument = gql`
+    query getAddDirectorPageInfo {
+  directorEligibleOfficers {
+    id
+    profile {
+      firstName
+      lastName
+    }
+  }
+  me {
+    profile {
+      officer {
+        divisions {
+          deptName
+          id
+        }
+      }
+    }
+  }
+}
+    `;
+export const AddNewDirectorDocument = gql`
+    mutation addNewDirector($where: DirectorWhereUniqueInput!, $create: DirectorCreateInput!, $update: DirectorUpdateInput!) {
+  upsertOneDirector(where: $where, create: $create, update: $update) {
+    id
   }
 }
     `;
@@ -4121,6 +4279,18 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     getCheckInPageUserInfo(variables?: GetCheckInPageUserInfoQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetCheckInPageUserInfoQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetCheckInPageUserInfoQuery>(GetCheckInPageUserInfoDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getCheckInPageUserInfo', 'query', variables);
+    },
+    getDirectorManagementPageInfo(variables?: GetDirectorManagementPageInfoQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetDirectorManagementPageInfoQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetDirectorManagementPageInfoQuery>(GetDirectorManagementPageInfoDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getDirectorManagementPageInfo', 'query', variables);
+    },
+    deleteDirector(variables: DeleteDirectorMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<DeleteDirectorMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<DeleteDirectorMutation>(DeleteDirectorDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'deleteDirector', 'mutation', variables);
+    },
+    getAddDirectorPageInfo(variables?: GetAddDirectorPageInfoQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetAddDirectorPageInfoQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetAddDirectorPageInfoQuery>(GetAddDirectorPageInfoDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getAddDirectorPageInfo', 'query', variables);
+    },
+    addNewDirector(variables: AddNewDirectorMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<AddNewDirectorMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<AddNewDirectorMutation>(AddNewDirectorDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'addNewDirector', 'mutation', variables);
     },
     getDivisionData(variables?: GetDivisionDataQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetDivisionDataQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetDivisionDataQuery>(GetDivisionDataDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getDivisionData', 'query', variables);

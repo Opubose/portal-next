@@ -35,6 +35,12 @@ export default function AdminToolsPage() {
     //   directorOnly: true
     // },
     {
+      title: 'Manage Director',
+      description: 'Manage Director',
+      onChosen: () => router.push('/admin/director/manage'),
+      directorOnly: true,
+    },
+    {
       title: 'Manage Typeform Application',
       description: 'Click here to manage all Typeform application',
       onChosen: () => router.push('/admin/typeform/'),

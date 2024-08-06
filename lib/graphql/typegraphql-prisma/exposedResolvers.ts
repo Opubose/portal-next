@@ -12,7 +12,12 @@ import {
   UpdateOneEventResolver,
   DeleteOneEventResolver,
   FindManyEventResolver,
+  DeleteOneDirectorResolver,
   // DeleteProfileResolver,
+  FindManyDirectorResolver,
+  DirectorRelationsResolver,
+  FindManyOfficerResolver,
+  UpsertOneDirectorResolver,
   UpsertOneProfileResolver,
   FindUniqueProfileResolver,
   CreateOneVanityLinkResolver,
@@ -32,6 +37,11 @@ import {
 } from '@generated/type-graphql';
 
 export const exposedResolvers: NonEmptyArray<Function> = [
+  FindManyDirectorResolver,
+  DirectorRelationsResolver,
+  UpsertOneDirectorResolver,
+  DeleteOneDirectorResolver,
+  FindManyOfficerResolver,
   UserRelationsResolver,
   EventRelationsResolver,
   EventReservationRelationsResolver,

@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { getPrismaConnection } from "lib/prisma/manager";
 import { singleton } from "tsyringe";
-import { Profile } from '@generated/type-graphql';
+import { Profile, Officer } from '@generated/type-graphql';
 
 @singleton()
 export default class OfficerService {
@@ -51,4 +51,17 @@ export default class OfficerService {
             }
         })
     }
+    async getDirectorEligibleOfficersByDivision(divisionName: string): Promise<Officer[]> {
+        return this.prismaConnection.officer.findMany({
+            where: {
+                divisions: {
+                    some: {
+                        deptName: {
+                            equals: divisionName
+                        }
+                    }
+                }
+            }
+        });
+	};
 }
