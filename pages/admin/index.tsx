@@ -28,6 +28,12 @@ export default function AdminToolsPage() {
       onChosen: () => router.push('/admin/officer/add'),
       directorOnly: true,
     },
+    {
+      title: 'Manage Membership Status',
+      description: 'Click here to manage membership of ACM Portal users',
+      onChosen: () => router.push('/admin/member/manage'),
+      directorOnly: true,
+    },
     // {
     //   title: 'Create Division Application',
     //   description: 'Click here to create new application for your division',

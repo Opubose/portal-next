@@ -1767,6 +1767,7 @@ export type Mutation = {
   deleteOneDirector?: Maybe<Director>;
   deleteOneEvent?: Maybe<Event>;
   deleteOneTypeformApplication?: Maybe<TypeformApplication>;
+  toggleMembershipStatus: Scalars['Boolean']['output'];
   transferFile: SignedUrl;
   updateOneEvent?: Maybe<Event>;
   updateOneFilledApplication?: Maybe<FilledApplication>;
@@ -1830,6 +1831,12 @@ export type MutationDeleteOneEventArgs = {
 
 export type MutationDeleteOneTypeformApplicationArgs = {
   where: TypeformApplicationWhereUniqueInput;
+};
+
+
+export type MutationToggleMembershipStatusArgs = {
+  membershipStatus: Scalars['Boolean']['input'];
+  profileId: Scalars['String']['input'];
 };
 
 
@@ -2432,6 +2439,23 @@ export type ProfileRelationFilter = {
   isNot?: InputMaybe<ProfileWhereInput>;
 };
 
+export enum ProfileScalarFieldEnum {
+  ClassStanding = 'classStanding',
+  Email = 'email',
+  FirstName = 'firstName',
+  Id = 'id',
+  LastName = 'lastName',
+  Major = 'major',
+  MembershipStatus = 'membershipStatus',
+  MembershipTs = 'membershipTS',
+  Netid = 'netid',
+  Resume = 'resume',
+  ResumeTs = 'resumeTS',
+  Roles = 'roles',
+  UserId = 'userId',
+  UtdStudent = 'utdStudent'
+}
+
 export type ProfileUpdateInput = {
   classStanding?: InputMaybe<StringFieldUpdateOperationsInput>;
   email?: InputMaybe<StringFieldUpdateOperationsInput>;
@@ -2631,6 +2655,7 @@ export type Query = {
   officerEligibleProfiles: Array<Profile>;
   officers: Array<Officer>;
   profile?: Maybe<Profile>;
+  profiles: Array<Profile>;
   returnAllOpenApp: Array<Application>;
   typeformApplications: Array<TypeformApplication>;
   upcomingEvents: Array<Event>;
@@ -2714,6 +2739,16 @@ export type QueryOfficersArgs = {
 
 export type QueryProfileArgs = {
   where: ProfileWhereUniqueInput;
+};
+
+
+export type QueryProfilesArgs = {
+  cursor?: InputMaybe<ProfileWhereUniqueInput>;
+  distinct?: InputMaybe<Array<ProfileScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<ProfileOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<ProfileWhereInput>;
 };
 
 
@@ -3589,6 +3624,22 @@ export type GetHomePageUserInfoQueryVariables = Exact<{
 
 export type GetHomePageUserInfoQuery = { __typename?: 'Query', me: { __typename?: 'User', attendedEvents: Array<{ __typename?: 'Event', description: string, location: string, summary: string, start: any }> }, profile?: { __typename?: 'Profile', firstName: string, netid: string, email: string } | null };
 
+export type GetMemberListQueryVariables = Exact<{
+  take?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type GetMemberListQuery = { __typename?: 'Query', profiles: Array<{ __typename?: 'Profile', id: string, firstName: string, lastName: string, user: { __typename?: 'User', isMember: boolean } }> };
+
+export type ToggleMembershipStatusMutationVariables = Exact<{
+  membershipStatus: Scalars['Boolean']['input'];
+  profileId: Scalars['String']['input'];
+}>;
+
+
+export type ToggleMembershipStatusMutation = { __typename?: 'Mutation', toggleMembershipStatus: boolean };
+
 export type GetAddOfficerPageDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -4032,6 +4083,26 @@ export const GetHomePageUserInfoDocument = gql`
   }
 }
     `;
+export const GetMemberListDocument = gql`
+    query getMemberList($take: Int, $skip: Int) {
+  profiles(take: $take, skip: $skip) {
+    id
+    firstName
+    lastName
+    user {
+      isMember
+    }
+  }
+}
+    `;
+export const ToggleMembershipStatusDocument = gql`
+    mutation toggleMembershipStatus($membershipStatus: Boolean!, $profileId: String!) {
+  toggleMembershipStatus(
+    membershipStatus: $membershipStatus
+    profileId: $profileId
+  )
+}
+    `;
 export const GetAddOfficerPageDataDocument = gql`
     query getAddOfficerPageData {
   me {
@@ -4324,6 +4395,12 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     getHomePageUserInfo(variables: GetHomePageUserInfoQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetHomePageUserInfoQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetHomePageUserInfoQuery>(GetHomePageUserInfoDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getHomePageUserInfo', 'query', variables);
+    },
+    getMemberList(variables?: GetMemberListQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetMemberListQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetMemberListQuery>(GetMemberListDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getMemberList', 'query', variables);
+    },
+    toggleMembershipStatus(variables: ToggleMembershipStatusMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<ToggleMembershipStatusMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ToggleMembershipStatusMutation>(ToggleMembershipStatusDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'toggleMembershipStatus', 'mutation', variables);
     },
     getAddOfficerPageData(variables?: GetAddOfficerPageDataQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetAddOfficerPageDataQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetAddOfficerPageDataQuery>(GetAddOfficerPageDataDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getAddOfficerPageData', 'query', variables);

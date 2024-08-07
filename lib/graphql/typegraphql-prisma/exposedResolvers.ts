@@ -13,6 +13,7 @@ import {
   DeleteOneEventResolver,
   FindManyEventResolver,
   DeleteOneDirectorResolver,
+  FindManyProfileResolver,
   // DeleteProfileResolver,
   FindManyDirectorResolver,
   DirectorRelationsResolver,
@@ -37,6 +38,7 @@ import {
 } from '@generated/type-graphql';
 
 export const exposedResolvers: NonEmptyArray<Function> = [
+  FindManyProfileResolver,
   FindManyDirectorResolver,
   DirectorRelationsResolver,
   UpsertOneDirectorResolver,

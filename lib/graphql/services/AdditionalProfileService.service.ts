@@ -18,4 +18,16 @@ export default class AdditionalProfileService {
       }
     });
   }
+
+  async toggleMembershipStatus(profileId: string, membershipStatus: boolean): Promise<boolean> {
+    await this.prismaConnection.profile.update({
+      where: {
+        id: profileId
+      },
+      data: {
+        membershipStatus,
+      }
+    });
+    return membershipStatus;
+  }
 }
