@@ -10,16 +10,34 @@ export default class OfficerService {
         this.prismaConnection = getPrismaConnection();
     }
     async addUserToDivision(profileId: string, divisionId: string) {
+        const division = await this.prismaConnection.division.findFirst({
+            where: {
+                id: divisionId,
+            },
+        });
+        if (!division) {
+            return;
+        }
         const officer = await this.prismaConnection.officer.findFirst({
             where: {
                 profileId,
             }
         });
         if (!officer) {
-            await this.prismaConnection.officer.create({
+            const newOfficer = await this.prismaConnection.officer.create({
                 data: {
                     divisionIds: [divisionId],
                     profileId
+                }
+            });
+            await this.prismaConnection.division.update({
+                data: {
+                    officerIds: {
+                        push: newOfficer.id
+                    }
+                },
+                where: {
+                    id: divisionId
                 }
             });
         } else {
@@ -32,7 +50,17 @@ export default class OfficerService {
                 where: {
                     profileId
                 }
-            })
+            });
+            await this.prismaConnection.division.update({
+                data: {
+                    officerIds: {
+                        push: officer.id
+                    }
+                },
+                where: {
+                    id: divisionId
+                }
+            });
         }
             
     }
