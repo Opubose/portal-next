@@ -1,0 +1,31 @@
+query getAddParticipantPageData {
+  me {
+    profile {
+      officer {
+        divisions {
+          id
+          deptName
+        }
+      }
+    }
+  }
+  profiles {
+    firstName
+    lastName
+    netid
+    id
+  }
+}
+
+mutation addParticipantToDivision(
+  $where: ParticipantWhereUniqueInput!
+  $create: ParticipantCreateInput!
+  $update: ParticipantUpdateInput!
+) {
+  upsertOneParticipant(where: $where, create: $create, update: $update) {
+    profile {
+      firstName
+      lastName
+    }
+  }
+}

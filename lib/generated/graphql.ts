@@ -2224,6 +2224,7 @@ export type Mutation = {
   updateOneOfficer?: Maybe<Officer>;
   updateOneTypeformApplication?: Maybe<TypeformApplication>;
   upsertOneDirector: Director;
+  upsertOneParticipant: Participant;
   upsertOneProfile: Profile;
 };
 
@@ -2333,6 +2334,13 @@ export type MutationUpsertOneDirectorArgs = {
   create: DirectorCreateInput;
   update: DirectorUpdateInput;
   where: DirectorWhereUniqueInput;
+};
+
+
+export type MutationUpsertOneParticipantArgs = {
+  create: ParticipantCreateInput;
+  update: ParticipantUpdateInput;
+  where: ParticipantWhereUniqueInput;
 };
 
 
@@ -2704,9 +2712,32 @@ export type Participant = {
   __typename?: 'Participant';
   _count?: Maybe<ParticipantCount>;
   divisionIds: Array<Scalars['String']['output']>;
+  divisions: Array<Division>;
   dummy?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
+  profile: Profile;
   profileId: Scalars['String']['output'];
+  scoreEntry: Array<ScoreEntry>;
+};
+
+
+export type ParticipantDivisionsArgs = {
+  cursor?: InputMaybe<DivisionWhereUniqueInput>;
+  distinct?: InputMaybe<Array<DivisionScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<DivisionOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<DivisionWhereInput>;
+};
+
+
+export type ParticipantScoreEntryArgs = {
+  cursor?: InputMaybe<ScoreEntryWhereUniqueInput>;
+  distinct?: InputMaybe<Array<ScoreEntryScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<ScoreEntryOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<ScoreEntryWhereInput>;
 };
 
 export type ParticipantCount = {
@@ -2723,6 +2754,14 @@ export type ParticipantCountDivisionsArgs = {
 
 export type ParticipantCountScoreEntryArgs = {
   where?: InputMaybe<ScoreEntryWhereInput>;
+};
+
+export type ParticipantCreateInput = {
+  divisions?: InputMaybe<DivisionCreateNestedManyWithoutParticipantsInput>;
+  dummy?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  profile: ProfileCreateNestedOneWithoutParticipantInput;
+  scoreEntry?: InputMaybe<ScoreEntryCreateNestedManyWithoutParticipantInput>;
 };
 
 export type ParticipantCreateNestedManyWithoutDivisionsInput = {
@@ -2817,6 +2856,13 @@ export type ParticipantScalarWhereInput = {
   dummy?: InputMaybe<StringNullableFilter>;
   id?: InputMaybe<StringFilter>;
   profileId?: InputMaybe<StringFilter>;
+};
+
+export type ParticipantUpdateInput = {
+  divisions?: InputMaybe<DivisionUpdateManyWithoutParticipantsNestedInput>;
+  dummy?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+  profile?: InputMaybe<ProfileUpdateOneRequiredWithoutParticipantNestedInput>;
+  scoreEntry?: InputMaybe<ScoreEntryUpdateManyWithoutParticipantNestedInput>;
 };
 
 export type ParticipantUpdateManyMutationInput = {
@@ -5153,6 +5199,20 @@ export type AddUserToDivisionMutationVariables = Exact<{
 
 export type AddUserToDivisionMutation = { __typename?: 'Mutation', updateOneOfficer?: { __typename?: 'Officer', profile: { __typename?: 'Profile', firstName: string, lastName: string, officer?: { __typename?: 'Officer', divisions: Array<{ __typename?: 'Division', deptName: string }> } | null } } | null };
 
+export type GetAddParticipantPageDataQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAddParticipantPageDataQuery = { __typename?: 'Query', me: { __typename?: 'User', profile?: { __typename?: 'Profile', officer?: { __typename?: 'Officer', divisions: Array<{ __typename?: 'Division', id: string, deptName: string }> } | null } | null }, profiles: Array<{ __typename?: 'Profile', firstName: string, lastName: string, netid: string, id: string }> };
+
+export type AddParticipantToDivisionMutationVariables = Exact<{
+  where: ParticipantWhereUniqueInput;
+  create: ParticipantCreateInput;
+  update: ParticipantUpdateInput;
+}>;
+
+
+export type AddParticipantToDivisionMutation = { __typename?: 'Mutation', upsertOneParticipant: { __typename?: 'Participant', profile: { __typename?: 'Profile', firstName: string, lastName: string } } };
+
 export type UpsertProfileMutationVariables = Exact<{
   where: ProfileWhereUniqueInput;
   create: ProfileCreateInput;
@@ -5663,6 +5723,36 @@ export const AddUserToDivisionDocument = gql`
   }
 }
     `;
+export const GetAddParticipantPageDataDocument = gql`
+    query getAddParticipantPageData {
+  me {
+    profile {
+      officer {
+        divisions {
+          id
+          deptName
+        }
+      }
+    }
+  }
+  profiles {
+    firstName
+    lastName
+    netid
+    id
+  }
+}
+    `;
+export const AddParticipantToDivisionDocument = gql`
+    mutation addParticipantToDivision($where: ParticipantWhereUniqueInput!, $create: ParticipantCreateInput!, $update: ParticipantUpdateInput!) {
+  upsertOneParticipant(where: $where, create: $create, update: $update) {
+    profile {
+      firstName
+      lastName
+    }
+  }
+}
+    `;
 export const UpsertProfileDocument = gql`
     mutation upsertProfile($where: ProfileWhereUniqueInput!, $create: ProfileCreateInput!, $update: ProfileUpdateInput!) {
   upsertOneProfile(where: $where, create: $create, update: $update) {
@@ -5969,6 +6059,12 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     addUserToDivision(variables: AddUserToDivisionMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<AddUserToDivisionMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<AddUserToDivisionMutation>(AddUserToDivisionDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'addUserToDivision', 'mutation', variables);
+    },
+    getAddParticipantPageData(variables?: GetAddParticipantPageDataQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetAddParticipantPageDataQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetAddParticipantPageDataQuery>(GetAddParticipantPageDataDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getAddParticipantPageData', 'query', variables);
+    },
+    addParticipantToDivision(variables: AddParticipantToDivisionMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<AddParticipantToDivisionMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<AddParticipantToDivisionMutation>(AddParticipantToDivisionDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'addParticipantToDivision', 'mutation', variables);
     },
     upsertProfile(variables: UpsertProfileMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<UpsertProfileMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<UpsertProfileMutation>(UpsertProfileDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'upsertProfile', 'mutation', variables);

@@ -69,6 +69,11 @@ export default function AdminToolsPage() {
       onChosen: () => router.push('/admin/events/edit'),
       directorOnly: false,
     },
+    {
+      title: 'Add participant into division',
+      description: 'Click here to add participant into your division',
+      onChosen: () => router.push('/admin/participant/add'),
+    },
   ];
   if (!officerStatusData.isOfficer) {
     return <AdminOnlyComponent />;
