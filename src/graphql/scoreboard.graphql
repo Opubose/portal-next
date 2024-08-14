@@ -1,0 +1,33 @@
+query getScoreboards {
+  scoreboards {
+    id
+    scoreboardName
+    division {
+      id
+      deptName
+    }
+  }
+}
+
+query getCreateScoreboardPageData {
+  me {
+    profile {
+      officer {
+        divisions {
+          id
+          deptName
+        }
+      }
+    }
+  }
+  eventCategories {
+    eventCategoryName
+    id
+  }
+}
+
+mutation createScoreboard($data: ScoreboardCreateInput!) {
+  createOneScoreboard(data: $data) {
+    scoreboardName
+  }
+}

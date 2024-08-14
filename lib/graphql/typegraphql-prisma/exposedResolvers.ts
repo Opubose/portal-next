@@ -3,6 +3,8 @@ import { NonEmptyArray } from 'type-graphql';
 import {
   EventRelationsResolver,
   EventReservationRelationsResolver,
+  CreateOneScoreboardResolver,
+  FindManyEventCategoryResolver,
   FindManyTypeformApplicationResolver,
   FindFirstTypeformApplicationResolver,
   CreateOneTypeformApplicationResolver,
@@ -35,6 +37,8 @@ import {
   CreateOneApplicationResolver,
   FindManyDivisionResolver,
   UpdateOneOfficerResolver,
+  ScoreboardRelationsResolver,
+  CreateOneEventCategoryResolver,
 } from '@generated/type-graphql';
 
 export const exposedResolvers: NonEmptyArray<Function> = [
@@ -47,6 +51,10 @@ export const exposedResolvers: NonEmptyArray<Function> = [
   UserRelationsResolver,
   EventRelationsResolver,
   EventReservationRelationsResolver,
+  CreateOneScoreboardResolver,
+  FindManyEventCategoryResolver,
+  ScoreboardRelationsResolver,
+  CreateOneEventCategoryResolver,
   FindManyTypeformApplicationResolver,
   FindFirstTypeformApplicationResolver,
   CreateOneTypeformApplicationResolver,

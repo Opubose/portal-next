@@ -32,6 +32,11 @@ export default function AdminToolsPage() {
       title: 'Manage Membership Status',
       description: 'Click here to manage membership of ACM Portal users',
       onChosen: () => router.push('/admin/member/manage'),
+    },
+    {
+      title: 'Manage Scoreboard',
+      description: 'Manage Scoreboard owned by your division',
+      onChosen: () => router.push('/admin/scoreboard/'),
       directorOnly: true,
     },
     // {
