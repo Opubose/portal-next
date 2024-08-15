@@ -7,12 +7,15 @@ import { OfficerStatusContext } from 'components/context/OfficerStatus';
 import { GraphQLError } from 'graphql';
 import { GetAttendanceInfoQuery } from 'lib/generated/graphql';
 import { useSession } from 'next-auth/react';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { useQuery } from 'react-query';
 import { gqlQueries } from 'src/api';
 import StatsPageTitle from 'components/admin/events/StatsPageTitle';
 import { useRouter } from 'next/router';
 import EventSummaryView from 'components/admin/events/EventSummaryView';
+import debounce from 'lodash.debounce';
+import Fuse from 'fuse.js';
+import { Input } from 'components/ui/input';
 
 export default function EventStatsPage() {
   const { status } = useSession({ required: true });
@@ -24,10 +27,40 @@ export default function EventStatsPage() {
   const [currentEvent, setCurrentEvent] = useState<GetAttendanceInfoQuery['events'][0] | null>(
     null,
   );
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredEvents, setFilteredEvents] = useState<
+    NonNullable<GetAttendanceInfoQuery['events']>
+  >([]);
+
+  const debounceSearchQuery = useMemo(() => {
+    return debounce((e) => setSearchQuery(e.target.value), 300);
+  }, []);
+
+  useEffect(() => {
+    if (searchQuery === '') {
+      setFilteredEvents(data?.events || []);
+    } else {
+      const fuse = new Fuse(data!.events!, {
+        keys: ['summary'],
+      });
+      const result = fuse.search(searchQuery);
+      setFilteredEvents(result.map((data) => data.item));
+    }
+  }, [searchQuery]);
+
+  useEffect(() => {
+    if (isLoading) return;
+    setFilteredEvents(data!.events);
+  }, [data, isLoading]);
+
+  useEffect(() => {
+    return () => {
+      debounceSearchQuery.cancel();
+    };
+  });
 
   if (!officerData.isDirector) return <AdminOnlyComponent />;
   if (isLoading || status === 'loading') return <Loading />;
-
   if (error) {
     console.error(error);
     return (
@@ -43,7 +76,11 @@ export default function EventStatsPage() {
       <StatsPageTitle handleGoBack={() => router.push('/admin')} />
       <div className="grid grid-cols-4 grid-rows-7 gap-4 h-[700px]">
         <div className="col-start-1 row-start-1 row-span-7 col-span-1">
-          <EventListView events={data!.events} onEventClick={(e) => setCurrentEvent(e)} />
+          <EventListView
+            onChangeSearchQuery={debounceSearchQuery}
+            events={filteredEvents}
+            onEventClick={(e) => setCurrentEvent(e)}
+          />
         </div>
         {currentEvent !== null && (
           <div className="col-start-2 row-start-1 row-span-1 col-span-3">
