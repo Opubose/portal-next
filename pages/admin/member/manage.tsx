@@ -8,12 +8,13 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useContext, useState } from 'react';
 import { gqlQueries } from 'src/api';
+import { useQuery } from 'react-query';
 
 export default function MemberManagementPage() {
   const { status } = useSession({ required: true });
   const router = useRouter();
   const officerData = useContext(OfficerStatusContext);
-  const [pageNumber, setPageNumber] = useState<number>(1);
+  const { data, isLoading, error } = useQuery(['profiles'], () => gqlQueries.getMemberList());
 
   const handleMembershipToggle = async (profileId: string, membershipStatus: boolean) => {
     try {
@@ -29,26 +30,16 @@ export default function MemberManagementPage() {
   };
 
   if (!officerData.isDirector) return <AdminOnlyComponent />;
-  if (status === 'loading') return <Loading />;
+  if (isLoading || status === 'loading') return <Loading />;
   return (
     <div className="p-5">
       <PageTitle handleGoBack={() => router.push('/admin')} />
       <MemberManagementList
-        pageNumber={pageNumber}
+        members={data!.profiles}
         handleMembershipUpdate={async (profileId, membershipStatus) =>
           handleMembershipToggle(profileId, membershipStatus)
         }
       />
-      <div className="flex justify-end items-center my-3 gap-x-3">
-        {pageNumber > 1 && (
-          <Button onClick={() => setPageNumber((prev) => prev - 1)} variant="secondary">
-            Previous page
-          </Button>
-        )}
-        <Button onClick={() => setPageNumber((prev) => prev + 1)} variant="secondary">
-          Next page
-        </Button>
-      </div>
     </div>
   );
 }

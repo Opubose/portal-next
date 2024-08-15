@@ -1,5 +1,5 @@
-query getMemberList($take: Int, $skip: Int) {
-  profiles(take: $take, skip: $skip) {
+query getMemberList {
+  profiles {
     id
     firstName
     lastName
