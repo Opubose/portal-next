@@ -11,6 +11,7 @@ interface ScoreboardRule {
 interface UpdateScoreboardFormProps {
   onManageParticipant: () => Promise<void>;
   onGoBack: () => Promise<void>;
+  onResetButtonClicked: () => void;
   scoreboardData: {
     scoreboardName: string;
     divisionId: string;
@@ -26,6 +27,7 @@ export default function UpdateScoreboardForm({
   eventCategories,
   onManageParticipant,
   onGoBack,
+  onResetButtonClicked,
 }: UpdateScoreboardFormProps) {
   return (
     <div className="p-5 flex flex-col gap-y-10 items-center w-3/5 mx-auto">
@@ -161,6 +163,13 @@ export default function UpdateScoreboardForm({
           }}
         >
           manage participant
+        </PortalButton>
+        <PortalButton
+          onClick={() => {
+            onResetButtonClicked();
+          }}
+        >
+          reset scoreboard
         </PortalButton>
       </div>
     </div>

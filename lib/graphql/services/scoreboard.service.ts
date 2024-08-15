@@ -18,4 +18,25 @@ export default class ScoreboardService {
       },
     });
   }
+  async resetScoreboardById(scoreboardId: string): Promise<void> {
+    const scoreEntries = await this.prismaConnection.scoreEntry.findMany({
+      where: {
+        scoreboardId,
+      },
+    });
+    await Promise.all(
+      scoreEntries.map(async (entry) => {
+        await this.prismaConnection.scoreEntry.update({
+          where: {
+            id: entry.id,
+          },
+          data: {
+            eventClaims: {
+              set: [],
+            },
+          },
+        });
+      }),
+    );
+  }
 }
