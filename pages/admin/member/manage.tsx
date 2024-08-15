@@ -1,4 +1,3 @@
-import { Button } from 'components/ui/button';
 import Loading from 'components/Loading';
 import AdminOnlyComponent from 'components/admin/AdminOnly';
 import MemberManagementList from 'components/admin/member/manage/MemberManagementList';
@@ -6,7 +5,7 @@ import PageTitle from 'components/admin/member/manage/PageTitle';
 import { OfficerStatusContext } from 'components/context/OfficerStatus';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { gqlQueries } from 'src/api';
 import { useQuery } from 'react-query';
 

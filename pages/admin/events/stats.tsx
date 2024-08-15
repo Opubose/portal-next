@@ -15,7 +15,6 @@ import { useRouter } from 'next/router';
 import EventSummaryView from 'components/admin/events/EventSummaryView';
 import debounce from 'lodash.debounce';
 import Fuse from 'fuse.js';
-import { Input } from 'components/ui/input';
 
 export default function EventStatsPage() {
   const { status } = useSession({ required: true });
