@@ -5,7 +5,13 @@ import { TContext } from '../interfaces/context.interface';
 @singleton()
 export default class EventCheckinService {
   async checkInEvent({ eventId, profileId }: EventCheckinInput, ctx: TContext) {
-    return ctx.prisma.eventReservation.upsert({
+    const alreadyCheckedIn = !!(await ctx.prisma.eventReservation.findFirst({
+      where: {
+        profileId,
+        eventId,
+      },
+    }));
+    const res = await ctx.prisma.eventReservation.upsert({
       where: {
         profileId_eventId: {
           eventId,
@@ -21,5 +27,9 @@ export default class EventCheckinService {
         status: 'checkin',
       },
     });
+    return {
+      ...res,
+      alreadyCheckedIn,
+    };
   }
 }

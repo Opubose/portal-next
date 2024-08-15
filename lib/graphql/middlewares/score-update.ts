@@ -6,10 +6,12 @@ type EventReservationResult = {
   profileId: string;
   eventId: string;
   status: string;
+  alreadyCheckedIn: boolean;
 };
 
 export const scoreUpdateAfterCheckIn: MiddlewareFn<TContext> = async ({ context }, next) => {
   const eventReservation: EventReservationResult = await next();
+  if (eventReservation.alreadyCheckedIn) return eventReservation;
   const eventCategory = await context.prisma.eventCategory.findFirst({
     where: {
       events: {
