@@ -16,8 +16,10 @@ export default function DirectorManagementPage() {
   const { status } = useSession({ required: true });
   const router = useRouter();
   const officerData = useContext(OfficerStatusContext);
-  const { data, isLoading, error } = useQuery(['directorData'], () =>
-    gqlQueries.getDirectorManagementPageInfo(),
+  const { data, isLoading, error } = useQuery(
+    ['directorData'],
+    () => gqlQueries.getDirectorManagementPageInfo(),
+    { enabled: status === 'authenticated' && officerData.isDirector },
   );
 
   if (!officerData.isDirector) return <AdminOnlyComponent />;

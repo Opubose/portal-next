@@ -21,8 +21,12 @@ export default function EventStatsPage() {
   const { status } = useSession({ required: true });
   const router = useRouter();
   const officerData = useContext(OfficerStatusContext);
-  const { data, isLoading, error } = useQuery(['attendanceData'], () =>
-    gqlQueries.getAttendanceInfo(),
+  const { data, isLoading, error } = useQuery(
+    ['attendanceData'],
+    () => gqlQueries.getAttendanceInfo(),
+    {
+      enabled: status === 'authenticated' && officerData.isDirector,
+    },
   );
   const [currentEvent, setCurrentEvent] = useState<GetAttendanceInfoQuery['events'][0] | null>(
     null,

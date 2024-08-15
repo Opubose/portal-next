@@ -14,7 +14,9 @@ export default function MemberManagementPage() {
   const { status } = useSession({ required: true });
   const router = useRouter();
   const officerData = useContext(OfficerStatusContext);
-  const { data, isLoading, error } = useQuery(['profiles'], () => gqlQueries.getMemberList());
+  const { data, isLoading, error } = useQuery(['profiles'], () => gqlQueries.getMemberList(), {
+    enabled: status === 'authenticated' && officerData.isDirector,
+  });
 
   const handleMembershipToggle = async (profileId: string, membershipStatus: boolean) => {
     try {

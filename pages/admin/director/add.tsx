@@ -15,8 +15,12 @@ export default function AddDirectorPage() {
   const { status } = useSession({ required: true });
   const router = useRouter();
   const officerData = useContext(OfficerStatusContext);
-  const { data, isLoading, error } = useQuery(['addDirectorPageData'], () =>
-    gqlQueries.getAddDirectorPageInfo(),
+  const { data, isLoading, error } = useQuery(
+    ['addDirectorPageData'],
+    () => gqlQueries.getAddDirectorPageInfo(),
+    {
+      enabled: status === 'authenticated' && officerData.isDirector,
+    },
   );
 
   const addNewDirectorHandler = async (officerId: string, divisionId: string) => {
