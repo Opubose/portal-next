@@ -20,6 +20,19 @@ export default function ScoreboardParticipantsManagementPage() {
       },
     }),
   );
+  const removeUserFromScoreboardHandler = async (participantId: string) => {
+    try {
+      await gqlQueries.removeParticipantFromScoreboard({
+        where: {
+          id: participantId,
+        },
+      });
+      alert('Successfully removed participant from scoreboard');
+    } catch (error) {
+      alert('Failed to remove participant from scoreboard. Please try again later...');
+      console.error(error);
+    }
+  };
   if (isLoading || status === 'loading') {
     return <Loading />;
   }
@@ -30,6 +43,7 @@ export default function ScoreboardParticipantsManagementPage() {
     <div className="p-5 w-full flex flex-col gap-y-4">
       <h1 className="text-2xl text-white">Participants of {data.scoreboard.scoreboardName} </h1>
       <ScoreboardParticipantsTable
+        removeUserFromScoreboardHandler={removeUserFromScoreboardHandler}
         participants={data.scoreboard.scoreEntries.map((entry) => ({
           firstName: entry.participant.profile.firstName,
           lastName: entry.participant.profile.lastName,

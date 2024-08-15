@@ -109,3 +109,9 @@ mutation addParticipantToScoreboard($data: ScoreEntryCreateInput!) {
 mutation resetScoreboard($data: ScoreboardResetInput!) {
   resetScoreboard(data: $data)
 }
+
+mutation removeParticipantFromScoreboard($where: ScoreEntryWhereUniqueInput!) {
+  deleteOneScoreEntry(where: $where) {
+    id
+  }
+}

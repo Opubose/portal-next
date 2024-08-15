@@ -46,6 +46,7 @@ import {
   FindManyProfileResolver,
   DivisionRelationsResolver,
   CreateOneScoreEntryResolver,
+  DeleteOneScoreEntryResolver,
 } from '@generated/type-graphql';
 
 export const exposedResolvers: NonEmptyArray<Function> = [
@@ -58,6 +59,7 @@ export const exposedResolvers: NonEmptyArray<Function> = [
   UserRelationsResolver,
   EventRelationsResolver,
   EventReservationRelationsResolver,
+  DeleteOneScoreEntryResolver,
   CreateOneScoreEntryResolver,
   DivisionRelationsResolver,
   UserRelationsResolver,

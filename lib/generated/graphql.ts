@@ -2273,6 +2273,7 @@ export type Mutation = {
   createOneVanityLink: VanityLink;
   deleteOneDirector?: Maybe<Director>;
   deleteOneEvent?: Maybe<Event>;
+  deleteOneScoreEntry?: Maybe<ScoreEntry>;
   deleteOneTypeformApplication?: Maybe<TypeformApplication>;
   resetScoreboard: Scalars['Boolean']['output'];
   toggleMembershipStatus: Scalars['Boolean']['output'];
@@ -2350,6 +2351,11 @@ export type MutationDeleteOneDirectorArgs = {
 
 export type MutationDeleteOneEventArgs = {
   where: EventWhereUniqueInput;
+};
+
+
+export type MutationDeleteOneScoreEntryArgs = {
+  where: ScoreEntryWhereUniqueInput;
 };
 
 
@@ -5410,6 +5416,13 @@ export type ResetScoreboardMutationVariables = Exact<{
 
 export type ResetScoreboardMutation = { __typename?: 'Mutation', resetScoreboard: boolean };
 
+export type RemoveParticipantFromScoreboardMutationVariables = Exact<{
+  where: ScoreEntryWhereUniqueInput;
+}>;
+
+
+export type RemoveParticipantFromScoreboardMutation = { __typename?: 'Mutation', deleteOneScoreEntry?: { __typename?: 'ScoreEntry', id: string } | null };
+
 export type CreateTypeformApplicationMutationVariables = Exact<{
   data: TypeformApplicationCreateInput;
 }>;
@@ -6096,6 +6109,13 @@ export const ResetScoreboardDocument = gql`
   resetScoreboard(data: $data)
 }
     `;
+export const RemoveParticipantFromScoreboardDocument = gql`
+    mutation removeParticipantFromScoreboard($where: ScoreEntryWhereUniqueInput!) {
+  deleteOneScoreEntry(where: $where) {
+    id
+  }
+}
+    `;
 export const CreateTypeformApplicationDocument = gql`
     mutation createTypeformApplication($data: TypeformApplicationCreateInput!) {
   createOneTypeformApplication(data: $data) {
@@ -6356,6 +6376,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     resetScoreboard(variables: ResetScoreboardMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<ResetScoreboardMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<ResetScoreboardMutation>(ResetScoreboardDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'resetScoreboard', 'mutation', variables);
+    },
+    removeParticipantFromScoreboard(variables: RemoveParticipantFromScoreboardMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<RemoveParticipantFromScoreboardMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<RemoveParticipantFromScoreboardMutation>(RemoveParticipantFromScoreboardDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'removeParticipantFromScoreboard', 'mutation', variables);
     },
     createTypeformApplication(variables: CreateTypeformApplicationMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<CreateTypeformApplicationMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<CreateTypeformApplicationMutation>(CreateTypeformApplicationDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createTypeformApplication', 'mutation', variables);

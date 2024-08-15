@@ -16,10 +16,12 @@ interface ScoreboardParticipantsTableProps {
     netid: string;
     score: number;
   }>;
+  removeUserFromScoreboardHandler: (participantId: string) => Promise<void>;
 }
 
 export default function ScoreboardParticipantsTable({
   participants,
+  removeUserFromScoreboardHandler,
 }: ScoreboardParticipantsTableProps) {
   if (participants.length === 0)
     return (
@@ -45,6 +47,7 @@ export default function ScoreboardParticipantsTable({
             <TableCell>Last Name</TableCell>
             <TableCell>NetID</TableCell>
             <TableCell>Score</TableCell>
+            <TableCell>Action</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -60,6 +63,16 @@ export default function ScoreboardParticipantsTable({
               <TableCell>{participant.lastName}</TableCell>
               <TableCell>{participant.netid}</TableCell>
               <TableCell>{participant.score}</TableCell>
+              <TableCell>
+                <button
+                  className="bg-red-400 rounded-lg p-3 text-white hover:bg-red-600"
+                  onClick={async () => {
+                    await removeUserFromScoreboardHandler(participant.participantId);
+                  }}
+                >
+                  remove this user from the scoreboard
+                </button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
