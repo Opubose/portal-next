@@ -7,6 +7,7 @@ import { checkValidEvent } from '../middlewares/check-valid-event';
 import { getSession } from 'next-auth/react';
 import { GraphQLError } from 'graphql';
 import { onlyEventOwner } from '../middlewares/only-event-owner';
+import { scoreUpdateAfterCheckIn } from '../middlewares/score-update';
 
 @Resolver(() => EventCheckin)
 @injectable()
@@ -14,13 +15,11 @@ export default class EventCheckinResolver {
   constructor(private EventCheckinService: EventCheckinService) {}
 
   @Mutation(() => EventCheckin)
-  @UseMiddleware([checkValidEvent, onlyEventOwner])
+  @UseMiddleware([checkValidEvent, onlyEventOwner, scoreUpdateAfterCheckIn])
   async checkinToEvent(
     @Arg('options', () => EventCheckinInput) options: EventCheckinInput,
     @Ctx() context: TContext,
   ) {
-    
-
     return this.EventCheckinService.checkInEvent(options, context);
   }
 }

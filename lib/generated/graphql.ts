@@ -1412,6 +1412,7 @@ export type EventCategoryWhereUniqueInput = {
 export type EventCheckin = {
   __typename?: 'EventCheckin';
   eventId: Scalars['String']['output'];
+  points?: Maybe<Array<PointClaimResult>>;
   profileId: Scalars['String']['output'];
 };
 
@@ -3048,6 +3049,12 @@ export type ParticipantWhereUniqueInput = {
   profile?: InputMaybe<ProfileRelationFilter>;
   profileId?: InputMaybe<Scalars['String']['input']>;
   scoreEntry?: InputMaybe<ScoreEntryListRelationFilter>;
+};
+
+export type PointClaimResult = {
+  __typename?: 'PointClaimResult';
+  scoreValue: Scalars['Float']['output'];
+  scoreboardName: Scalars['String']['output'];
 };
 
 export type Profile = {
@@ -5160,7 +5167,7 @@ export type CheckInToEventMutationVariables = Exact<{
 }>;
 
 
-export type CheckInToEventMutation = { __typename?: 'Mutation', checkinToEvent: { __typename?: 'EventCheckin', profileId: string, eventId: string } };
+export type CheckInToEventMutation = { __typename?: 'Mutation', checkinToEvent: { __typename?: 'EventCheckin', profileId: string, eventId: string, points?: Array<{ __typename?: 'PointClaimResult', scoreboardName: string, scoreValue: number }> | null } };
 
 export type GetCheckInPageUserInfoQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -5574,6 +5581,10 @@ export const CheckInToEventDocument = gql`
   checkinToEvent(options: $checkInData) {
     profileId
     eventId
+    points {
+      scoreboardName
+      scoreValue
+    }
   }
 }
     `;

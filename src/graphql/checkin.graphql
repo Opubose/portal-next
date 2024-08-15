@@ -2,6 +2,10 @@ mutation checkInToEvent($checkInData: EventCheckinInput!) {
   checkinToEvent(options: $checkInData) {
     profileId
     eventId
+    points {
+      scoreboardName
+      scoreValue
+    }
   }
 }
 
