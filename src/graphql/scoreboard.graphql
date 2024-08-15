@@ -31,3 +31,76 @@ mutation createScoreboard($data: ScoreboardCreateInput!) {
     scoreboardName
   }
 }
+
+query getScoreboardByIdPageData($where: ScoreboardWhereUniqueInput!) {
+  me {
+    profile {
+      officer {
+        divisions {
+          id
+          deptName
+        }
+      }
+    }
+  }
+  scoreboard(where: $where) {
+    scoreboardName
+    scoreRules {
+      scoreValue
+      id
+      eventCategory {
+        id
+      }
+    }
+    division {
+      id
+    }
+  }
+  eventCategories {
+    eventCategoryName
+    id
+  }
+}
+
+query getScoreboardParticipantsByIdPageData($where: ScoreboardWhereUniqueInput!) {
+  scoreboard(where: $where) {
+    scoreboardName
+    scoreEntries {
+      id
+      participant {
+        profile {
+          firstName
+          lastName
+          netid
+        }
+      }
+    }
+  }
+}
+
+query getScoreboardEligibleParticipants($where: ScoreboardWhereUniqueInput!) {
+  scoreboard(where: $where) {
+    scoreboardName
+    division {
+      participants {
+        id
+        profile {
+          firstName
+          lastName
+          netid
+        }
+      }
+    }
+  }
+}
+
+mutation addParticipantToScoreboard($data: ScoreEntryCreateInput!) {
+  createOneScoreEntry(data: $data) {
+    participant {
+      profile {
+        firstName
+        lastName
+      }
+    }
+  }
+}

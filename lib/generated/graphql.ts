@@ -778,11 +778,66 @@ export type DirectorWhereUniqueInput = {
 export type Division = {
   __typename?: 'Division';
   _count?: Maybe<DivisionCount>;
+  applications: Array<Application>;
   deptName: Scalars['String']['output'];
   directorIds: Array<Scalars['String']['output']>;
+  directors: Array<Director>;
   id: Scalars['String']['output'];
   officerIds: Array<Scalars['String']['output']>;
+  officers: Array<Officer>;
   participantIds: Array<Scalars['String']['output']>;
+  participants: Array<Participant>;
+  scoreboard: Array<Scoreboard>;
+};
+
+
+export type DivisionApplicationsArgs = {
+  cursor?: InputMaybe<ApplicationWhereUniqueInput>;
+  distinct?: InputMaybe<Array<ApplicationScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<ApplicationOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<ApplicationWhereInput>;
+};
+
+
+export type DivisionDirectorsArgs = {
+  cursor?: InputMaybe<DirectorWhereUniqueInput>;
+  distinct?: InputMaybe<Array<DirectorScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<DirectorOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<DirectorWhereInput>;
+};
+
+
+export type DivisionOfficersArgs = {
+  cursor?: InputMaybe<OfficerWhereUniqueInput>;
+  distinct?: InputMaybe<Array<OfficerScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<OfficerOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<OfficerWhereInput>;
+};
+
+
+export type DivisionParticipantsArgs = {
+  cursor?: InputMaybe<ParticipantWhereUniqueInput>;
+  distinct?: InputMaybe<Array<ParticipantScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<ParticipantOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<ParticipantWhereInput>;
+};
+
+
+export type DivisionScoreboardArgs = {
+  cursor?: InputMaybe<ScoreboardWhereUniqueInput>;
+  distinct?: InputMaybe<Array<ScoreboardScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<ScoreboardOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<ScoreboardWhereInput>;
 };
 
 export type DivisionCount = {
@@ -2211,6 +2266,7 @@ export type Mutation = {
   createOneEvent: Event;
   createOneEventCategory: EventCategory;
   createOneFilledApplication: FilledApplication;
+  createOneScoreEntry: ScoreEntry;
   createOneScoreboard: Scoreboard;
   createOneTypeformApplication: TypeformApplication;
   createOneVanityLink: VanityLink;
@@ -2262,6 +2318,11 @@ export type MutationCreateOneEventCategoryArgs = {
 
 export type MutationCreateOneFilledApplicationArgs = {
   data: FilledApplicationCreateInput;
+};
+
+
+export type MutationCreateOneScoreEntryArgs = {
+  data: ScoreEntryCreateInput;
 };
 
 
@@ -2847,6 +2908,13 @@ export type ParticipantRelationFilter = {
   is?: InputMaybe<ParticipantWhereInput>;
   isNot?: InputMaybe<ParticipantWhereInput>;
 };
+
+export enum ParticipantScalarFieldEnum {
+  DivisionIds = 'divisionIds',
+  Dummy = 'dummy',
+  Id = 'id',
+  ProfileId = 'profileId'
+}
 
 export type ParticipantScalarWhereInput = {
   AND?: InputMaybe<Array<ParticipantScalarWhereInput>>;
@@ -3498,6 +3566,7 @@ export type Query = {
   profile?: Maybe<Profile>;
   profiles: Array<Profile>;
   returnAllOpenApp: Array<Application>;
+  scoreboard?: Maybe<Scoreboard>;
   scoreboards: Array<Scoreboard>;
   typeformApplications: Array<TypeformApplication>;
   upcomingEvents: Array<Event>;
@@ -3601,6 +3670,11 @@ export type QueryProfilesArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<ProfileWhereInput>;
+};
+
+
+export type QueryScoreboardArgs = {
+  where: ScoreboardWhereUniqueInput;
 };
 
 
@@ -3832,8 +3906,18 @@ export type ScoreEntry = {
   dummy?: Maybe<Scalars['String']['output']>;
   eventClaims: Array<Scalars['String']['output']>;
   id: Scalars['String']['output'];
+  participant: Participant;
   participantId: Scalars['String']['output'];
+  scoreboard: Scoreboard;
   scoreboardId: Scalars['String']['output'];
+};
+
+export type ScoreEntryCreateInput = {
+  dummy?: InputMaybe<Scalars['String']['input']>;
+  eventClaims?: InputMaybe<ScoreEntryCreateeventClaimsInput>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  participant: ParticipantCreateNestedOneWithoutScoreEntryInput;
+  scoreboard: ScoreboardCreateNestedOneWithoutScoreEntriesInput;
 };
 
 export type ScoreEntryCreateManyParticipantInput = {
@@ -4049,10 +4133,12 @@ export type ScoreEntryWhereUniqueInput = {
 
 export type ScoreRule = {
   __typename?: 'ScoreRule';
+  eventCategory: EventCategory;
   eventCategoryId: Scalars['String']['output'];
   id: Scalars['String']['output'];
   maxClaimCount?: Maybe<Scalars['Int']['output']>;
   scoreValue: Scalars['Int']['output'];
+  scoreboard: Scoreboard;
   scoreboardId: Scalars['String']['output'];
 };
 
@@ -4400,6 +4486,12 @@ export type ScoreboardRelationFilter = {
   is?: InputMaybe<ScoreboardWhereInput>;
   isNot?: InputMaybe<ScoreboardWhereInput>;
 };
+
+export enum ScoreboardScalarFieldEnum {
+  DivisionId = 'divisionId',
+  Id = 'id',
+  ScoreboardName = 'scoreboardName'
+}
 
 export type ScoreboardScalarWhereInput = {
   AND?: InputMaybe<Array<ScoreboardScalarWhereInput>>;
@@ -5260,6 +5352,34 @@ export type CreateScoreboardMutationVariables = Exact<{
 
 export type CreateScoreboardMutation = { __typename?: 'Mutation', createOneScoreboard: { __typename?: 'Scoreboard', scoreboardName: string } };
 
+export type GetScoreboardByIdPageDataQueryVariables = Exact<{
+  where: ScoreboardWhereUniqueInput;
+}>;
+
+
+export type GetScoreboardByIdPageDataQuery = { __typename?: 'Query', me: { __typename?: 'User', profile?: { __typename?: 'Profile', officer?: { __typename?: 'Officer', divisions: Array<{ __typename?: 'Division', id: string, deptName: string }> } | null } | null }, scoreboard?: { __typename?: 'Scoreboard', scoreboardName: string, scoreRules: Array<{ __typename?: 'ScoreRule', scoreValue: number, id: string, eventCategory: { __typename?: 'EventCategory', id: string } }>, division: { __typename?: 'Division', id: string } } | null, eventCategories: Array<{ __typename?: 'EventCategory', eventCategoryName: string, id: string }> };
+
+export type GetScoreboardParticipantsByIdPageDataQueryVariables = Exact<{
+  where: ScoreboardWhereUniqueInput;
+}>;
+
+
+export type GetScoreboardParticipantsByIdPageDataQuery = { __typename?: 'Query', scoreboard?: { __typename?: 'Scoreboard', scoreboardName: string, scoreEntries: Array<{ __typename?: 'ScoreEntry', id: string, participant: { __typename?: 'Participant', profile: { __typename?: 'Profile', firstName: string, lastName: string, netid: string } } }> } | null };
+
+export type GetScoreboardEligibleParticipantsQueryVariables = Exact<{
+  where: ScoreboardWhereUniqueInput;
+}>;
+
+
+export type GetScoreboardEligibleParticipantsQuery = { __typename?: 'Query', scoreboard?: { __typename?: 'Scoreboard', scoreboardName: string, division: { __typename?: 'Division', participants: Array<{ __typename?: 'Participant', id: string, profile: { __typename?: 'Profile', firstName: string, lastName: string, netid: string } }> } } | null };
+
+export type AddParticipantToScoreboardMutationVariables = Exact<{
+  data: ScoreEntryCreateInput;
+}>;
+
+
+export type AddParticipantToScoreboardMutation = { __typename?: 'Mutation', createOneScoreEntry: { __typename?: 'ScoreEntry', participant: { __typename?: 'Participant', profile: { __typename?: 'Profile', firstName: string, lastName: string } } } };
+
 export type CreateTypeformApplicationMutationVariables = Exact<{
   data: TypeformApplicationCreateInput;
 }>;
@@ -5844,6 +5964,83 @@ export const CreateScoreboardDocument = gql`
   }
 }
     `;
+export const GetScoreboardByIdPageDataDocument = gql`
+    query getScoreboardByIdPageData($where: ScoreboardWhereUniqueInput!) {
+  me {
+    profile {
+      officer {
+        divisions {
+          id
+          deptName
+        }
+      }
+    }
+  }
+  scoreboard(where: $where) {
+    scoreboardName
+    scoreRules {
+      scoreValue
+      id
+      eventCategory {
+        id
+      }
+    }
+    division {
+      id
+    }
+  }
+  eventCategories {
+    eventCategoryName
+    id
+  }
+}
+    `;
+export const GetScoreboardParticipantsByIdPageDataDocument = gql`
+    query getScoreboardParticipantsByIdPageData($where: ScoreboardWhereUniqueInput!) {
+  scoreboard(where: $where) {
+    scoreboardName
+    scoreEntries {
+      id
+      participant {
+        profile {
+          firstName
+          lastName
+          netid
+        }
+      }
+    }
+  }
+}
+    `;
+export const GetScoreboardEligibleParticipantsDocument = gql`
+    query getScoreboardEligibleParticipants($where: ScoreboardWhereUniqueInput!) {
+  scoreboard(where: $where) {
+    scoreboardName
+    division {
+      participants {
+        id
+        profile {
+          firstName
+          lastName
+          netid
+        }
+      }
+    }
+  }
+}
+    `;
+export const AddParticipantToScoreboardDocument = gql`
+    mutation addParticipantToScoreboard($data: ScoreEntryCreateInput!) {
+  createOneScoreEntry(data: $data) {
+    participant {
+      profile {
+        firstName
+        lastName
+      }
+    }
+  }
+}
+    `;
 export const CreateTypeformApplicationDocument = gql`
     mutation createTypeformApplication($data: TypeformApplicationCreateInput!) {
   createOneTypeformApplication(data: $data) {
@@ -6086,6 +6283,18 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     createScoreboard(variables: CreateScoreboardMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<CreateScoreboardMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<CreateScoreboardMutation>(CreateScoreboardDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createScoreboard', 'mutation', variables);
+    },
+    getScoreboardByIdPageData(variables: GetScoreboardByIdPageDataQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetScoreboardByIdPageDataQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetScoreboardByIdPageDataQuery>(GetScoreboardByIdPageDataDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getScoreboardByIdPageData', 'query', variables);
+    },
+    getScoreboardParticipantsByIdPageData(variables: GetScoreboardParticipantsByIdPageDataQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetScoreboardParticipantsByIdPageDataQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetScoreboardParticipantsByIdPageDataQuery>(GetScoreboardParticipantsByIdPageDataDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getScoreboardParticipantsByIdPageData', 'query', variables);
+    },
+    getScoreboardEligibleParticipants(variables: GetScoreboardEligibleParticipantsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetScoreboardEligibleParticipantsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetScoreboardEligibleParticipantsQuery>(GetScoreboardEligibleParticipantsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getScoreboardEligibleParticipants', 'query', variables);
+    },
+    addParticipantToScoreboard(variables: AddParticipantToScoreboardMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<AddParticipantToScoreboardMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<AddParticipantToScoreboardMutation>(AddParticipantToScoreboardDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'addParticipantToScoreboard', 'mutation', variables);
     },
     createTypeformApplication(variables: CreateTypeformApplicationMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<CreateTypeformApplicationMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<CreateTypeformApplicationMutation>(CreateTypeformApplicationDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createTypeformApplication', 'mutation', variables);

@@ -4,6 +4,9 @@ import {
   EventRelationsResolver,
   EventReservationRelationsResolver,
   CreateOneScoreboardResolver,
+  FindUniqueScoreboardResolver,
+  ScoreEntryRelationsResolver,
+  ScoreRuleRelationsResolver,
   FindManyEventCategoryResolver,
   FindManyTypeformApplicationResolver,
   FindFirstTypeformApplicationResolver,
@@ -41,6 +44,8 @@ import {
   UpsertOneParticipantResolver,
   ParticipantRelationsResolver,
   FindManyProfileResolver,
+  DivisionRelationsResolver,
+  CreateOneScoreEntryResolver,
 } from '@generated/type-graphql';
 
 export const exposedResolvers: NonEmptyArray<Function> = [
@@ -53,6 +58,12 @@ export const exposedResolvers: NonEmptyArray<Function> = [
   UserRelationsResolver,
   EventRelationsResolver,
   EventReservationRelationsResolver,
+  CreateOneScoreEntryResolver,
+  DivisionRelationsResolver,
+  UserRelationsResolver,
+  ScoreEntryRelationsResolver,
+  ScoreRuleRelationsResolver,
+  FindUniqueScoreboardResolver,
   UpsertOneParticipantResolver,
   ParticipantRelationsResolver,
   CreateOneScoreboardResolver,
