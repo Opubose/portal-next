@@ -3917,6 +3917,7 @@ export type ScoreEntry = {
   participantId: Scalars['String']['output'];
   scoreboard: Scoreboard;
   scoreboardId: Scalars['String']['output'];
+  totalScore: Scalars['Float']['output'];
 };
 
 export type ScoreEntryCreateInput = {
@@ -5376,7 +5377,7 @@ export type GetScoreboardParticipantsByIdPageDataQueryVariables = Exact<{
 }>;
 
 
-export type GetScoreboardParticipantsByIdPageDataQuery = { __typename?: 'Query', scoreboard?: { __typename?: 'Scoreboard', scoreboardName: string, scoreEntries: Array<{ __typename?: 'ScoreEntry', id: string, participant: { __typename?: 'Participant', profile: { __typename?: 'Profile', firstName: string, lastName: string, netid: string } } }> } | null };
+export type GetScoreboardParticipantsByIdPageDataQuery = { __typename?: 'Query', scoreboard?: { __typename?: 'Scoreboard', scoreboardName: string, scoreEntries: Array<{ __typename?: 'ScoreEntry', id: string, totalScore: number, participant: { __typename?: 'Participant', profile: { __typename?: 'Profile', firstName: string, lastName: string, netid: string } } }> } | null };
 
 export type GetScoreboardEligibleParticipantsQueryVariables = Exact<{
   where: ScoreboardWhereUniqueInput;
@@ -6039,6 +6040,7 @@ export const GetScoreboardParticipantsByIdPageDataDocument = gql`
           netid
         }
       }
+      totalScore
     }
   }
 }

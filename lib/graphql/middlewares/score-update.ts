@@ -49,7 +49,6 @@ export const scoreUpdateAfterCheckIn: MiddlewareFn<TContext> = async ({ context 
   });
   const deltas = await Promise.all(
     rules.map(async (rule) => {
-      // do something in here
       const scoreEntry = await context.prisma.scoreEntry.findFirst({
         where: {
           scoreboardId: rule.scoreboard.id,

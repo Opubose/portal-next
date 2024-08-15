@@ -14,6 +14,7 @@ interface ScoreboardParticipantsTableProps {
     firstName: string;
     lastName: string;
     netid: string;
+    score: number;
   }>;
 }
 
@@ -26,27 +27,39 @@ export default function ScoreboardParticipantsTable({
         <h1 className="text-xl text-white">No participants found!</h1>
       </div>
     );
+  const sortedParticipants = participants
+    .sort((a, b) => b.score - a.score)
+    .reduce((acc: Array<(typeof participants)[0] & { rank: number }>, curr) => {
+      if (acc.length === 0) return [...acc, { ...curr, rank: 1 }];
+      if (curr.score < acc[acc.length - 1].score)
+        return [...acc, { ...curr, rank: acc.length + 1 }];
+      return [...acc, { ...curr, rank: acc[acc.length - 1].rank }];
+    }, []);
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
+            <TableCell>Rank</TableCell>
             <TableCell>First Name</TableCell>
             <TableCell>Last Name</TableCell>
             <TableCell>NetID</TableCell>
+            <TableCell>Score</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {participants.map((participant) => (
+          {sortedParticipants.map((participant) => (
             <TableRow
               key={participant.participantId}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row">
-                {participant.firstName}
+                {participant.rank}
               </TableCell>
+              <TableCell>{participant.firstName}</TableCell>
               <TableCell>{participant.lastName}</TableCell>
               <TableCell>{participant.netid}</TableCell>
+              <TableCell>{participant.score}</TableCell>
             </TableRow>
           ))}
         </TableBody>

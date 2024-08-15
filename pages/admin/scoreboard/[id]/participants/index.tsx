@@ -35,6 +35,7 @@ export default function ScoreboardParticipantsManagementPage() {
           lastName: entry.participant.profile.lastName,
           participantId: entry.id,
           netid: entry.participant.profile.netid,
+          score: entry.totalScore,
         }))}
       />
       <div className="flex gap-x-3">

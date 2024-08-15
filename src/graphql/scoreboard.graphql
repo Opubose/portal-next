@@ -74,6 +74,7 @@ query getScoreboardParticipantsByIdPageData($where: ScoreboardWhereUniqueInput!)
           netid
         }
       }
+      totalScore
     }
   }
 }
