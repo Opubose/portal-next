@@ -6,14 +6,18 @@ import { useQuery } from 'react-query';
 import ErrorComponent from 'components/ErrorComponent';
 import { GraphQLError } from 'graphql/error';
 import Loading from 'components/Loading';
+import { OfficerStatusContext } from 'components/context/OfficerStatus';
+import { useContext } from 'react';
+import AdminOnlyComponent from 'components/admin/AdminOnly';
 
 export default function AddEventPage() {
   const router = useRouter();
   const { status } = useSession({ required: true });
+  const officerStatusData = useContext(OfficerStatusContext);
   const { data, isLoading, error } = useQuery(
     ['eventAddData'],
-    () => gqlQueries.getUserOfficerStatusData(),
-    { enabled: status === 'authenticated' },
+    () => gqlQueries.getEventCategories(),
+    { enabled: status === 'authenticated' && officerStatusData.isOfficer },
   );
 
   if (isLoading || status == 'loading') return <Loading />;
@@ -27,15 +31,8 @@ export default function AddEventPage() {
     );
   }
 
-  if (!data?.me.isOfficer) {
-    return (
-      <div>
-        <h1 className="text-xl">
-          You do not have officer permission. If you are an officer, please connect your account
-          with your ACM account
-        </h1>
-      </div>
-    );
+  if (!officerStatusData.isOfficer) {
+    return <AdminOnlyComponent />;
   }
 
   return (
@@ -44,18 +41,24 @@ export default function AddEventPage() {
       onGoBack={() => router.push('/admin')}
       onFormSubmit={async (form) => {
         // Remove id from form object
-        const { id, ...rest } = form;
+        const { id, category, ...rest } = form;
 
         await gqlQueries.createNewEvent({
           data: {
             ...rest,
             start: new Date(form.start),
             end: new Date(form.end),
+            category: {
+              connect: {
+                id: category!.id,
+              },
+            },
           },
         });
         alert('Event created');
       }}
       submitActionName="Create Event"
+      eventCategories={data!.eventCategories}
     />
   );
 }

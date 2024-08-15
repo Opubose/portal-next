@@ -11,6 +11,7 @@ interface EventFormProps {
   onDeleteEvent?: () => Promise<void>;
   submitActionName: string;
   onFormSubmit: (form: ActiveEventResult) => Promise<void>;
+  eventCategories: Array<{ id: string; eventCategoryName: string }>;
 }
 
 export default function EventForm({
@@ -19,27 +20,31 @@ export default function EventForm({
   onDeleteEvent,
   event,
   onFormSubmit,
+  eventCategories,
   submitActionName,
 }: EventFormProps) {
-  const [eventForm, setEventForm] = useState<ActiveEventResult>(
-    event || {
-      start: new Date().toISOString(),
-      end: new Date().toISOString(),
-      description: '',
-      location: '',
-      summary: '',
-      url: '',
-      id: '',
-      isPublic: true,
-    },
-  );
   const {
     watch,
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     setValue,
-  } = useForm<ActiveEventResult>({ mode: 'onChange' });
+  } = useForm<ActiveEventResult>({
+    mode: 'onChange',
+    defaultValues: {
+      start: event?.start || new Date().toISOString(),
+      end: event?.end || new Date().toISOString(),
+      description: event?.description || '',
+      location: event?.location || '',
+      summary: event?.summary || '',
+      url: event?.url || '',
+      id: event?.id || '',
+      isPublic: event?.isPublic || true,
+      category: {
+        id: event?.category?.id || '',
+      },
+    },
+  });
   const watchStartDate = watch('start', new Date().toISOString());
   return (
     <div className="p-3">
@@ -77,7 +82,6 @@ export default function EventForm({
               {...register('summary', {
                 required: 'Enter event title.',
               })}
-              placeholder={eventForm.summary}
             />
             <div className="text-xs text-red-600">{errors.summary && errors.summary.message}</div>
           </div>
@@ -87,7 +91,6 @@ export default function EventForm({
             <input
               className="appearance-none block w-full text-gray-100 rounded py-3 px-4 mb-3 leading-tight focus:outline-none bg-transparent border border-gray-600"
               type="text"
-              placeholder={eventForm.description}
               {...register('description', {
                 required: 'Enter event description.',
               })}
@@ -102,7 +105,6 @@ export default function EventForm({
             <input
               className="appearance-none block w-full text-gray-100 rounded py-3 px-4 mb-3 leading-tight focus:outline-none bg-transparent border border-gray-600"
               type="text"
-              placeholder={eventForm.location}
               {...register('location', {
                 required: 'Enter event location.',
               })}
@@ -114,17 +116,31 @@ export default function EventForm({
           <div className="w-full px-3">
             <label className="block text-gray-200 font-semibold mb-2">resource url</label>
             <input
-              placeholder={eventForm.url}
               className="appearance-none block w-full text-gray-100 rounded py-3 px-4 mb-3 leading-tight focus:outline-none bg-transparent border border-gray-600"
               type="text"
               {...register('url')}
             />
           </div>
+          <div className="w-full px-3">
+            <label className="block text-gray-200 font-semibold mb-2">event category*</label>
+            <select
+              className="appearance-none block w-full text-gray-100 rounded py-3 px-4 mb-3 leading-tight focus:outline-none bg-transparent border border-gray-600"
+              {...register('category.id', {
+                required: 'Event category required',
+              })}
+            >
+              {eventCategories.map((category) => (
+                <option value={category.id}>{category.eventCategoryName}</option>
+              ))}
+            </select>
+            <div className="text-xs text-red-600">
+              {errors.description && errors.description.message}
+            </div>
+          </div>
           <div className="mt-4">
             <DateTimePickerWrapper
               register={register}
               setValue={setValue}
-              value={eventForm.start}
               name="start"
               label="Event Start Date"
               renderInput={(params) => (
@@ -142,7 +158,6 @@ export default function EventForm({
             <DateTimePickerWrapper
               register={register}
               setValue={setValue}
-              value={eventForm.end}
               name="end"
               label="Event End Date"
               renderInput={(params) => (

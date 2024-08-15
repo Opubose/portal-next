@@ -29,6 +29,13 @@ query getAdminEventData($orderBy: [EventOrderByWithRelationInput!], $take: Int) 
     isPublic
     end
     start
+    category {
+      id
+    }
+  }
+  eventCategories {
+    eventCategoryName
+    id
   }
 }
 
@@ -66,5 +73,12 @@ mutation migrateEvent($email: String!, $netId: String!) {
   checkInOldEvent(email: $email, netID: $netId) {
     eventId
     profileId
+  }
+}
+
+query getEventCategories {
+  eventCategories {
+    eventCategoryName
+    id
   }
 }

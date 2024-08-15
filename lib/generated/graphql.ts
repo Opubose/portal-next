@@ -5209,7 +5209,7 @@ export type GetAdminEventDataQueryVariables = Exact<{
 }>;
 
 
-export type GetAdminEventDataQuery = { __typename?: 'Query', events: Array<{ __typename?: 'Event', id: string, summary: string, location: string, url: string, description: string, isPublic: boolean, end: any, start: any }> };
+export type GetAdminEventDataQuery = { __typename?: 'Query', events: Array<{ __typename?: 'Event', id: string, summary: string, location: string, url: string, description: string, isPublic: boolean, end: any, start: any, category?: { __typename?: 'EventCategory', id: string } | null }>, eventCategories: Array<{ __typename?: 'EventCategory', eventCategoryName: string, id: string }> };
 
 export type UpdateEventDataMutationVariables = Exact<{
   data: EventUpdateInput;
@@ -5245,6 +5245,11 @@ export type MigrateEventMutationVariables = Exact<{
 
 
 export type MigrateEventMutation = { __typename?: 'Mutation', checkInOldEvent: Array<{ __typename?: 'EventCheckin', eventId: string, profileId: string }> };
+
+export type GetEventCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetEventCategoriesQuery = { __typename?: 'Query', eventCategories: Array<{ __typename?: 'EventCategory', eventCategoryName: string, id: string }> };
 
 export type FindFilledApplicationsQueryVariables = Exact<{
   whereApp: ApplicationWhereUniqueInput;
@@ -5673,6 +5678,13 @@ export const GetAdminEventDataDocument = gql`
     isPublic
     end
     start
+    category {
+      id
+    }
+  }
+  eventCategories {
+    eventCategoryName
+    id
   }
 }
     `;
@@ -5715,6 +5727,14 @@ export const MigrateEventDocument = gql`
   checkInOldEvent(email: $email, netID: $netId) {
     eventId
     profileId
+  }
+}
+    `;
+export const GetEventCategoriesDocument = gql`
+    query getEventCategories {
+  eventCategories {
+    eventCategoryName
+    id
   }
 }
     `;
@@ -6235,6 +6255,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     migrateEvent(variables: MigrateEventMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<MigrateEventMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<MigrateEventMutation>(MigrateEventDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'migrateEvent', 'mutation', variables);
+    },
+    getEventCategories(variables?: GetEventCategoriesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetEventCategoriesQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetEventCategoriesQuery>(GetEventCategoriesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getEventCategories', 'query', variables);
     },
     findFilledApplications(variables: FindFilledApplicationsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<FindFilledApplicationsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<FindFilledApplicationsQuery>(FindFilledApplicationsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'findFilledApplications', 'query', variables);
