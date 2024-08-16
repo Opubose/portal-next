@@ -3,9 +3,7 @@ query getMemberList {
     id
     firstName
     lastName
-    user {
-      isMember
-    }
+    isMember
   }
 }
 

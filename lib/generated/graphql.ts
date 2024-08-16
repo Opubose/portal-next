@@ -2238,6 +2238,7 @@ export type Profile = {
   fillApplications: Array<FilledApplication>;
   firstName: Scalars['String']['output'];
   id: Scalars['String']['output'];
+  isMember: Scalars['Boolean']['output'];
   lastName: Scalars['String']['output'];
   major: Scalars['String']['output'];
   membershipStatus: Scalars['Boolean']['output'];
@@ -3624,13 +3625,10 @@ export type GetHomePageUserInfoQueryVariables = Exact<{
 
 export type GetHomePageUserInfoQuery = { __typename?: 'Query', me: { __typename?: 'User', attendedEvents: Array<{ __typename?: 'Event', description: string, location: string, summary: string, start: any }> }, profile?: { __typename?: 'Profile', firstName: string, netid: string, email: string } | null };
 
-export type GetMemberListQueryVariables = Exact<{
-  take?: InputMaybe<Scalars['Int']['input']>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-}>;
+export type GetMemberListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetMemberListQuery = { __typename?: 'Query', profiles: Array<{ __typename?: 'Profile', id: string, firstName: string, lastName: string, user: { __typename?: 'User', isMember: boolean } }> };
+export type GetMemberListQuery = { __typename?: 'Query', profiles: Array<{ __typename?: 'Profile', id: string, firstName: string, lastName: string, isMember: boolean }> };
 
 export type ToggleMembershipStatusMutationVariables = Exact<{
   membershipStatus: Scalars['Boolean']['input'];
@@ -4084,14 +4082,12 @@ export const GetHomePageUserInfoDocument = gql`
 }
     `;
 export const GetMemberListDocument = gql`
-    query getMemberList($take: Int, $skip: Int) {
-  profiles(take: $take, skip: $skip) {
+    query getMemberList {
+  profiles {
     id
     firstName
     lastName
-    user {
-      isMember
-    }
+    isMember
   }
 }
     `;

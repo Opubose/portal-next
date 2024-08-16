@@ -72,11 +72,11 @@ export default function MemberManagementList({
                   <TableCell>
                     {member.firstName} {member.lastName}
                   </TableCell>
-                  <TableCell>{member.user.isMember ? 'yes' : 'no'}</TableCell>
+                  <TableCell>{member.isMember ? 'yes' : 'no'}</TableCell>
                   <TableCell className="flex gap-x-3">
                     <Button
                       onClick={async () => {
-                        await handleMembershipUpdate(member.id, !member.user.isMember);
+                        await handleMembershipUpdate(member.id, !member.isMember);
                       }}
                       variant="secondary"
                     >
