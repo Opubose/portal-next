@@ -1,44 +1,36 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 html,
 body {
-@layer base {
   padding: 0;
-  :root {
   margin: 0;
-    --background: 0 0% 100%;
-  font-family: Gilroy, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    --foreground: 0 0% 3.9%;
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-    --card: 0 0% 100%;
+  font-family:
+    Gilroy,
+    -apple-system,
+    BlinkMacSystemFont,
+    Segoe UI,
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    Fira Sans,
+    Droid Sans,
+    Helvetica Neue,
+    sans-serif;
 }
-    --card-foreground: 0 0% 3.9%;
 
-    --popover: 0 0% 100%;
 a {
-    --popover-foreground: 0 0% 3.9%;
   color: inherit;
-    --primary: 0 0% 9%;
   text-decoration: none;
-    --primary-foreground: 0 0% 98%;
 }
-    --secondary: 0 0% 96.1%;
 
-    --secondary-foreground: 0 0% 9%;
 * {
-    --muted: 0 0% 96.1%;
   box-sizing: border-box;
-    --muted-foreground: 0 0% 45.1%;
 }
-    --accent: 0 0% 96.1%;
 
-    --accent-foreground: 0 0% 9%;
 css-o9k5xi-MuiInputBase-root {
-    --destructive: 0 84.2% 60.2%;
-  color:  white !important;
-    --destructive-foreground: 0 0% 98%;
+  color: white !important;
 }
 
 @layer base {
