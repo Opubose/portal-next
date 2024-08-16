@@ -1,8 +1,9 @@
 import { injectable } from 'tsyringe';
-import { Arg, Ctx, FieldResolver, Mutation, Resolver, Root } from 'type-graphql';
+import { Arg, Ctx, FieldResolver, Mutation, Resolver, Root, UseMiddleware } from 'type-graphql';
 import { Profile, TypeformSubmission } from '@generated/type-graphql';
 import AdditionalProfileService from '../services/AdditionalProfileService.service';
 import { TContext } from '../interfaces/context.interface';
+import { onlyExecutiveAndDevDirectorAllowed } from '../middlewares/division-director-only';
 
 @Resolver(() => Profile)
 @injectable()
@@ -15,6 +16,7 @@ export default class AdditionalProfileResolver {
   }
 
   @Mutation(() => Boolean)
+  @UseMiddleware(onlyExecutiveAndDevDirectorAllowed)
   async toggleMembershipStatus(
     @Arg('profileId', () => String) profileId: string,
     @Arg('membershipStatus', () => Boolean) membershipStatus: boolean,
