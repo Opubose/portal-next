@@ -1,6 +1,5 @@
-import { Application, GetApplicationDataQuery, TypeformApplication } from 'lib/generated/graphql';
+import { GetApplicationDataQuery } from 'lib/generated/graphql';
 import ApplicationCard from './typeformApplicationSystem/ApplicationCard';
-import { PopupButton } from '@typeform/embed-react';
 import Button from './Button';
 import Link from 'next/link';
 
@@ -20,34 +19,21 @@ interface OpenApplicationsViewProps {
 export default function OpenApplicationsView({
   applications,
   typeformApplications,
-  userData,
 }: OpenApplicationsViewProps) {
   return typeformApplications.length !== 0 || applications.length !== 0 ? (
     <div className="w-full flex flex-col items-center lg:flex-row flex-wrap gap-[30px]">
       {typeformApplications.map(
-        ({ id, typeformName, description, typeformId, externalResourceUrl, division }) => (
+        ({ id, typeformName, description, externalResourceUrl, division, endpoint }) => (
           <ApplicationCard
             key={id}
             title={typeformName}
             description={description}
             buttons={[
-              <PopupButton
-                keepSession={true}
-                id={typeformId}
-                hidden={{
-                  email: userData.email,
-                  first_name: userData.firstName,
-                  last_name: userData.lastName,
-                  major: userData.major,
-                  net_id: userData.netid,
-                  classification: userData.classStanding,
-                }}
-                className="my-button"
-              >
-                <div className="text-center cursor-pointer transition-all duration-75 w-fit bg-gradient-to-r from-pink-700 to-purple-700 hover:opacity-80 text-white font-Gilroy font-bold py-2 px-8">
-                  apply
-                </div>
-              </PopupButton>,
+              <div className="text-center cursor-pointer transition-all duration-75 w-fit bg-gradient-to-r from-pink-700 to-purple-700 hover:opacity-80 text-white font-Gilroy font-bold py-2 px-8">
+                <Link href={`/typeform/${endpoint}`} passHref>
+                  <a target="_blank">apply</a>
+                </Link>
+              </div>,
               // exclude 'learn more' button when external url is blank
               ...(externalResourceUrl && externalResourceUrl !== ''
                 ? [
