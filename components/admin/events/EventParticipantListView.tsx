@@ -1,3 +1,4 @@
+import Button from 'components/Button';
 import { Input } from 'components/ui/input';
 import { ScrollArea } from 'components/ui/scroll-area';
 import { Table, TableHeader, TableHead, TableBody, TableRow, TableCell } from 'components/ui/table';
@@ -52,12 +53,25 @@ export default function EventParticipantListView({ currentEvent }: EventParticip
             <h1>This event does not have any attendance</h1>
           ) : (
             <>
-              <div className="my-2">
+              <div className="my-2 flex gap-x-2 items-center">
                 <Input
                   className="rounded-xl text-black"
                   placeholder="Search for participant"
                   onChange={debounceSearchQuery}
                 />
+                <Button
+                  className="rounded-xl"
+                  onClick={() => {
+                    const value = Math.floor(Math.random() * filteredProfiles.length);
+                    alert(
+                      filteredProfiles[value].profile.firstName +
+                        ' ' +
+                        filteredProfiles[value].profile.lastName,
+                    );
+                  }}
+                >
+                  Choose a random participant
+                </Button>
               </div>
               <Table>
                 <TableHeader>
