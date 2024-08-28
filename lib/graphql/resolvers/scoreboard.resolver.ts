@@ -4,7 +4,7 @@ import { InjectSessionMiddleware } from '../middlewares/inject-session';
 import { injectable } from 'tsyringe';
 import ScoreboardService from '../services/scoreboard.service';
 import DivisionService from '../services/divisions.service';
-import { TContext } from '../interfaces/context.interface';
+import type { TContext } from '../interfaces/context.interface';
 import { ScoreboardResetInput } from '../schemas/Scoreboard';
 
 @Resolver(() => Scoreboard)
@@ -13,7 +13,7 @@ export default class AdditionalScoreboardResolver {
   constructor(
     private scoreboardService: ScoreboardService,
     private divisionService: DivisionService,
-  ) {}
+  ) { }
 
   @Query(() => [Scoreboard])
   @UseMiddleware(InjectSessionMiddleware)

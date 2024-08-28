@@ -1,7 +1,7 @@
 import { Ctx, FieldResolver, Resolver, Root } from 'type-graphql';
 import { ScoreEntry } from '@generated/type-graphql';
 import { injectable } from 'tsyringe';
-import { TContext } from '../interfaces/context.interface';
+import type { TContext } from '../interfaces/context.interface';
 
 @Resolver(() => ScoreEntry)
 @injectable()
