@@ -16,13 +16,16 @@ export default function DirectorManagementPage() {
   const { status } = useSession({ required: true });
   const router = useRouter();
   const officerData = useContext(OfficerStatusContext);
+  const isDevDirectorOrExecutive =
+    officerData.directorOfDivisions.indexOf('Development') !== -1 ||
+    officerData.directorOfDivisions.indexOf('Executive') !== -1;
   const { data, isLoading, error } = useQuery(
     ['directorData'],
     () => gqlQueries.getDirectorManagementPageInfo(),
-    { enabled: status === 'authenticated' && officerData.isDirector },
+    { enabled: status === 'authenticated' && officerData.isDirector && isDevDirectorOrExecutive },
   );
 
-  if (!officerData.isDirector) return <AdminOnlyComponent />;
+  if (!officerData.isDirector || !isDevDirectorOrExecutive) return <AdminOnlyComponent />;
   if (isLoading || status === 'loading') return <Loading />;
 
   const removeDirectorHandler = async (directorId: string) => {

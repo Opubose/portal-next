@@ -3467,7 +3467,7 @@ export type VanityLinkCreateInput = {
 export type GetOfficerStatusQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetOfficerStatusQuery = { __typename?: 'Query', me: { __typename?: 'User', isOfficer: boolean, isDirector: boolean } };
+export type GetOfficerStatusQuery = { __typename?: 'Query', me: { __typename?: 'User', isOfficer: boolean, isDirector: boolean, profile?: { __typename?: 'Profile', officer?: { __typename?: 'Officer', director?: { __typename?: 'Director', divisions: Array<{ __typename?: 'Division', deptName: string }> } | null } | null } | null } };
 
 export type GetApplicationDataQueryVariables = Exact<{
   where?: InputMaybe<TypeformApplicationWhereInput>;
@@ -3749,6 +3749,15 @@ export const GetOfficerStatusDocument = gql`
   me {
     isOfficer
     isDirector
+    profile {
+      officer {
+        director {
+          divisions {
+            deptName
+          }
+        }
+      }
+    }
   }
 }
     `;
