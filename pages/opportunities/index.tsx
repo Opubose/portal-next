@@ -32,7 +32,7 @@ const ApplicationsPage: NextPage = () => {
   );
 
   const [open, setOpen] = useState(false);
-  const [tabIndex, setTabIndex] = useState<number>(0);
+  const [tabIndex, setTabIndex] = useState<number>(1);
   useEffect(() => {
     if (sessionStorage.getItem('showToast') == '1') {
       setOpen(true);
