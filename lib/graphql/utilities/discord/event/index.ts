@@ -1,4 +1,4 @@
-import { Event, EventUpdateInput } from 'lib/generated/graphql';
+import { Event, EventUpdateInput } from '@generated/type-graphql';
 
 type GuildEvent = {
   channel_id: null;

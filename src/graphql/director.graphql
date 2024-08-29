@@ -1,0 +1,46 @@
+query getDirectorManagementPageInfo {
+  directors {
+    id
+    divisions {
+      deptName
+    }
+    officer {
+      profile {
+        firstName
+        lastName
+      }
+    }
+  }
+}
+
+mutation deleteDirector($where: DirectorWhereUniqueInput!) {
+  deleteOneDirector(where: $where) {
+    id
+  }
+}
+
+query getAddDirectorPageInfo {
+  directorEligibleOfficers {
+    id
+    profile {
+      firstName
+      lastName
+    }
+  }
+  me {
+    profile {
+      officer {
+        divisions {
+          deptName
+          id
+        }
+      }
+    }
+  }
+}
+
+mutation addNewDirector($where: DirectorWhereUniqueInput!, $create: DirectorCreateInput!, $update: DirectorUpdateInput!) {
+  upsertOneDirector(where: $where, create: $create, update: $update) {
+    id
+  }
+}

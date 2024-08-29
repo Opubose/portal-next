@@ -1,0 +1,12 @@
+query getMemberList {
+  profiles {
+    id
+    firstName
+    lastName
+    isMember
+  }
+}
+
+mutation toggleMembershipStatus($membershipStatus: Boolean!, $profileId: String!) {
+  toggleMembershipStatus(membershipStatus: $membershipStatus, profileId: $profileId)
+}

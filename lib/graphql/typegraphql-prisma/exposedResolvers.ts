@@ -1,6 +1,8 @@
 import { NonEmptyArray } from 'type-graphql';
 
 import {
+  EventRelationsResolver,
+  EventReservationRelationsResolver,
   FindManyTypeformApplicationResolver,
   FindFirstTypeformApplicationResolver,
   CreateOneTypeformApplicationResolver,
@@ -10,12 +12,18 @@ import {
   UpdateOneEventResolver,
   DeleteOneEventResolver,
   FindManyEventResolver,
+  DeleteOneDirectorResolver,
+  FindManyProfileResolver,
   // DeleteProfileResolver,
+  FindManyDirectorResolver,
+  DirectorRelationsResolver,
+  FindManyOfficerResolver,
+  UpsertOneDirectorResolver,
   UpsertOneProfileResolver,
   FindUniqueProfileResolver,
   CreateOneVanityLinkResolver,
   UserRelationsResolver,
-  FindManyApplicationResolver, 
+  FindManyApplicationResolver,
   FindManyFilledApplicationResolver,
   ApplicationRelationsResolver,
   FilledApplicationRelationsResolver,
@@ -26,11 +34,19 @@ import {
   UpdateOneFilledApplicationResolver,
   CreateOneApplicationResolver,
   FindManyDivisionResolver,
-  UpdateOneOfficerResolver
+  UpdateOneOfficerResolver,
 } from '@generated/type-graphql';
 
 export const exposedResolvers: NonEmptyArray<Function> = [
+  FindManyProfileResolver,
+  FindManyDirectorResolver,
+  DirectorRelationsResolver,
+  UpsertOneDirectorResolver,
+  DeleteOneDirectorResolver,
+  FindManyOfficerResolver,
   UserRelationsResolver,
+  EventRelationsResolver,
+  EventReservationRelationsResolver,
   FindManyTypeformApplicationResolver,
   FindFirstTypeformApplicationResolver,
   CreateOneTypeformApplicationResolver,
@@ -57,5 +73,5 @@ export const exposedResolvers: NonEmptyArray<Function> = [
   CreateOneApplicationResolver,
   FindManyDivisionResolver,
   FindManyEventResolver,
-  UpdateOneOfficerResolver
-];  
+  UpdateOneOfficerResolver,
+];

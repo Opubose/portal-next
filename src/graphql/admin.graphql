@@ -2,5 +2,14 @@ query getOfficerStatus {
   me {
     isOfficer
     isDirector
+    profile {
+      officer {
+        director {
+          divisions {
+            deptName
+          }
+        }
+      }
+    }
   }
 }

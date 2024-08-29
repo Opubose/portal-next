@@ -14,14 +14,14 @@ import {
 } from '../middlewares/send-email';
 import { addTypeformHiddenFields, addTypeformWebhook } from '../middlewares/typeform';
 import { checkValidOfficer } from '../middlewares/check-valid-officer';
-import { onlyProfileOwner } from '../middlewares/only-profile-owner';
+import { onlyExecutiveAndDevDirectorAllowed } from '../middlewares/division-director-only';
 
 export const resolversEnhanceMap: ResolversEnhanceMap = {
   Event: {
     createOneEvent: [UseMiddleware(onlyOfficerAllowed), UseMiddleware(onEventCreationComplete)],
     updateOneEvent: [UseMiddleware(onlyOfficerAllowed)],
     deleteOneEvent: [UseMiddleware(onlyOfficerAllowed)],
-    events: [UseMiddleware(onlyOfficerAllowed)]
+    events: [UseMiddleware(onlyOfficerAllowed)],
   },
   TypeformApplication: {
     createOneTypeformApplication: [
@@ -53,11 +53,14 @@ export const resolversEnhanceMap: ResolversEnhanceMap = {
     findFirstFilledApplication: [UseMiddleware(onlyOfficerAllowed)],
     deleteManyFilledApplication: [UseMiddleware(onlyOfficerAllowed)],
     deleteOneFilledApplication: [UseMiddleware(onlyOfficerAllowed)],
-    createOneFilledApplication: [UseMiddleware(onApplicationSubmissionComplete)]
+    createOneFilledApplication: [UseMiddleware(onApplicationSubmissionComplete)],
   },
   Application: {
-    application: [UseMiddleware(checkValidOfficer)]
+    application: [UseMiddleware(checkValidOfficer)],
   },
-  
-
+  Director: {
+    upsertOneDirector: [UseMiddleware(onlyExecutiveAndDevDirectorAllowed)],
+    deleteOneDirector: [UseMiddleware(onlyExecutiveAndDevDirectorAllowed)],
+    directors: [UseMiddleware(onlyExecutiveAndDevDirectorAllowed)],
+  },
 };

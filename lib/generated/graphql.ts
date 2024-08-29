@@ -567,9 +567,26 @@ export type Director = {
   __typename?: 'Director';
   _count?: Maybe<DirectorCount>;
   divisionIds: Array<Scalars['String']['output']>;
+  divisions: Array<Division>;
   dummy?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
+  officer?: Maybe<Officer>;
   officerId: Scalars['String']['output'];
+};
+
+
+export type DirectorDivisionsArgs = {
+  cursor?: InputMaybe<DivisionWhereUniqueInput>;
+  distinct?: InputMaybe<Array<DivisionScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<DivisionOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<DivisionWhereInput>;
+};
+
+
+export type DirectorOfficerArgs = {
+  where?: InputMaybe<OfficerWhereInput>;
 };
 
 export type DirectorCount = {
@@ -580,6 +597,13 @@ export type DirectorCount = {
 
 export type DirectorCountDivisionsArgs = {
   where?: InputMaybe<DivisionWhereInput>;
+};
+
+export type DirectorCreateInput = {
+  divisions?: InputMaybe<DivisionCreateNestedManyWithoutDirectorsInput>;
+  dummy?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  officer?: InputMaybe<OfficerCreateNestedOneWithoutDirectorInput>;
 };
 
 export type DirectorCreateNestedManyWithoutDivisionsInput = {
@@ -640,6 +664,13 @@ export type DirectorOrderByWithRelationInput = {
   officerId?: InputMaybe<SortOrder>;
 };
 
+export enum DirectorScalarFieldEnum {
+  DivisionIds = 'divisionIds',
+  Dummy = 'dummy',
+  Id = 'id',
+  OfficerId = 'officerId'
+}
+
 export type DirectorScalarWhereInput = {
   AND?: InputMaybe<Array<DirectorScalarWhereInput>>;
   NOT?: InputMaybe<Array<DirectorScalarWhereInput>>;
@@ -648,6 +679,12 @@ export type DirectorScalarWhereInput = {
   dummy?: InputMaybe<StringNullableFilter>;
   id?: InputMaybe<StringFilter>;
   officerId?: InputMaybe<StringFilter>;
+};
+
+export type DirectorUpdateInput = {
+  divisions?: InputMaybe<DivisionUpdateManyWithoutDirectorsNestedInput>;
+  dummy?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+  officer?: InputMaybe<OfficerUpdateOneWithoutDirectorNestedInput>;
 };
 
 export type DirectorUpdateManyMutationInput = {
@@ -998,9 +1035,20 @@ export type Event = {
   id: Scalars['String']['output'];
   isPublic: Scalars['Boolean']['output'];
   location: Scalars['String']['output'];
+  profiles: Array<EventReservation>;
   start: Scalars['DateTimeISO']['output'];
   summary: Scalars['String']['output'];
   url: Scalars['String']['output'];
+};
+
+
+export type EventProfilesArgs = {
+  cursor?: InputMaybe<EventReservationWhereUniqueInput>;
+  distinct?: InputMaybe<Array<EventReservationScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<EventReservationOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<EventReservationWhereInput>;
 };
 
 export type EventCheckin = {
@@ -1077,8 +1125,10 @@ export type EventRelationFilter = {
 
 export type EventReservation = {
   __typename?: 'EventReservation';
+  event: Event;
   eventId: Scalars['String']['output'];
   id: Scalars['String']['output'];
+  profile: Profile;
   profileId: Scalars['String']['output'];
   status: Scalars['String']['output'];
 };
@@ -1714,13 +1764,16 @@ export type Mutation = {
   createOneFilledApplication: FilledApplication;
   createOneTypeformApplication: TypeformApplication;
   createOneVanityLink: VanityLink;
+  deleteOneDirector?: Maybe<Director>;
   deleteOneEvent?: Maybe<Event>;
   deleteOneTypeformApplication?: Maybe<TypeformApplication>;
+  toggleMembershipStatus: Scalars['Boolean']['output'];
   transferFile: SignedUrl;
   updateOneEvent?: Maybe<Event>;
   updateOneFilledApplication?: Maybe<FilledApplication>;
   updateOneOfficer?: Maybe<Officer>;
   updateOneTypeformApplication?: Maybe<TypeformApplication>;
+  upsertOneDirector: Director;
   upsertOneProfile: Profile;
 };
 
@@ -1766,6 +1819,11 @@ export type MutationCreateOneVanityLinkArgs = {
 };
 
 
+export type MutationDeleteOneDirectorArgs = {
+  where: DirectorWhereUniqueInput;
+};
+
+
 export type MutationDeleteOneEventArgs = {
   where: EventWhereUniqueInput;
 };
@@ -1773,6 +1831,12 @@ export type MutationDeleteOneEventArgs = {
 
 export type MutationDeleteOneTypeformApplicationArgs = {
   where: TypeformApplicationWhereUniqueInput;
+};
+
+
+export type MutationToggleMembershipStatusArgs = {
+  membershipStatus: Scalars['Boolean']['input'];
+  profileId: Scalars['String']['input'];
 };
 
 
@@ -1802,6 +1866,13 @@ export type MutationUpdateOneOfficerArgs = {
 export type MutationUpdateOneTypeformApplicationArgs = {
   data: TypeformApplicationUpdateInput;
   where: TypeformApplicationWhereUniqueInput;
+};
+
+
+export type MutationUpsertOneDirectorArgs = {
+  create: DirectorCreateInput;
+  update: DirectorUpdateInput;
+  where: DirectorWhereUniqueInput;
 };
 
 
@@ -2015,6 +2086,13 @@ export type OfficerOrderByWithRelationInput = {
   profileId?: InputMaybe<SortOrder>;
 };
 
+export enum OfficerScalarFieldEnum {
+  DivisionIds = 'divisionIds',
+  Dummy = 'dummy',
+  Id = 'id',
+  ProfileId = 'profileId'
+}
+
 export type OfficerScalarWhereInput = {
   AND?: InputMaybe<Array<OfficerScalarWhereInput>>;
   NOT?: InputMaybe<Array<OfficerScalarWhereInput>>;
@@ -2160,6 +2238,7 @@ export type Profile = {
   fillApplications: Array<FilledApplication>;
   firstName: Scalars['String']['output'];
   id: Scalars['String']['output'];
+  isMember: Scalars['Boolean']['output'];
   lastName: Scalars['String']['output'];
   major: Scalars['String']['output'];
   membershipStatus: Scalars['Boolean']['output'];
@@ -2361,6 +2440,23 @@ export type ProfileRelationFilter = {
   isNot?: InputMaybe<ProfileWhereInput>;
 };
 
+export enum ProfileScalarFieldEnum {
+  ClassStanding = 'classStanding',
+  Email = 'email',
+  FirstName = 'firstName',
+  Id = 'id',
+  LastName = 'lastName',
+  Major = 'major',
+  MembershipStatus = 'membershipStatus',
+  MembershipTs = 'membershipTS',
+  Netid = 'netid',
+  Resume = 'resume',
+  ResumeTs = 'resumeTS',
+  Roles = 'roles',
+  UserId = 'userId',
+  UtdStudent = 'utdStudent'
+}
+
 export type ProfileUpdateInput = {
   classStanding?: InputMaybe<StringFieldUpdateOperationsInput>;
   email?: InputMaybe<StringFieldUpdateOperationsInput>;
@@ -2548,6 +2644,8 @@ export type Query = {
   __typename?: 'Query';
   application?: Maybe<Application>;
   applications: Array<Application>;
+  directorEligibleOfficers: Array<Officer>;
+  directors: Array<Director>;
   divisions: Array<Division>;
   events: Array<Event>;
   filledApplications: Array<FilledApplication>;
@@ -2556,7 +2654,9 @@ export type Query = {
   getSpreadsheetOverviewRevenueData: Array<SpreadsheetOverviewRevenueType>;
   me: User;
   officerEligibleProfiles: Array<Profile>;
+  officers: Array<Officer>;
   profile?: Maybe<Profile>;
+  profiles: Array<Profile>;
   returnAllOpenApp: Array<Application>;
   typeformApplications: Array<TypeformApplication>;
   upcomingEvents: Array<Event>;
@@ -2575,6 +2675,16 @@ export type QueryApplicationsArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<ApplicationWhereInput>;
+};
+
+
+export type QueryDirectorsArgs = {
+  cursor?: InputMaybe<DirectorWhereUniqueInput>;
+  distinct?: InputMaybe<Array<DirectorScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<DirectorOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<DirectorWhereInput>;
 };
 
 
@@ -2618,8 +2728,28 @@ export type QueryFindFirstTypeformApplicationArgs = {
 };
 
 
+export type QueryOfficersArgs = {
+  cursor?: InputMaybe<OfficerWhereUniqueInput>;
+  distinct?: InputMaybe<Array<OfficerScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<OfficerOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<OfficerWhereInput>;
+};
+
+
 export type QueryProfileArgs = {
   where: ProfileWhereUniqueInput;
+};
+
+
+export type QueryProfilesArgs = {
+  cursor?: InputMaybe<ProfileWhereUniqueInput>;
+  distinct?: InputMaybe<Array<ProfileScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<ProfileOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<ProfileWhereInput>;
 };
 
 
@@ -3337,7 +3467,7 @@ export type VanityLinkCreateInput = {
 export type GetOfficerStatusQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetOfficerStatusQuery = { __typename?: 'Query', me: { __typename?: 'User', isOfficer: boolean, isDirector: boolean } };
+export type GetOfficerStatusQuery = { __typename?: 'Query', me: { __typename?: 'User', isOfficer: boolean, isDirector: boolean, profile?: { __typename?: 'Profile', officer?: { __typename?: 'Officer', director?: { __typename?: 'Director', divisions: Array<{ __typename?: 'Division', deptName: string }> } | null } | null } | null } };
 
 export type GetApplicationDataQueryVariables = Exact<{
   where?: InputMaybe<TypeformApplicationWhereInput>;
@@ -3380,6 +3510,11 @@ export type CreateApplicationMutationVariables = Exact<{
 
 export type CreateApplicationMutation = { __typename?: 'Mutation', createOneApplication: { __typename?: 'Application', id: string } };
 
+export type GetAttendanceInfoQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAttendanceInfoQuery = { __typename?: 'Query', events: Array<{ __typename?: 'Event', summary: string, description: string, location: string, start: any, end: any, profiles: Array<{ __typename?: 'EventReservation', profile: { __typename?: 'Profile', firstName: string, lastName: string } }> }> };
+
 export type CheckInToEventMutationVariables = Exact<{
   checkInData: EventCheckinInput;
 }>;
@@ -3391,6 +3526,32 @@ export type GetCheckInPageUserInfoQueryVariables = Exact<{ [key: string]: never;
 
 
 export type GetCheckInPageUserInfoQuery = { __typename?: 'Query', me: { __typename?: 'User', profile?: { __typename?: 'Profile', id: string } | null } };
+
+export type GetDirectorManagementPageInfoQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetDirectorManagementPageInfoQuery = { __typename?: 'Query', directors: Array<{ __typename?: 'Director', id: string, divisions: Array<{ __typename?: 'Division', deptName: string }>, officer?: { __typename?: 'Officer', profile: { __typename?: 'Profile', firstName: string, lastName: string } } | null }> };
+
+export type DeleteDirectorMutationVariables = Exact<{
+  where: DirectorWhereUniqueInput;
+}>;
+
+
+export type DeleteDirectorMutation = { __typename?: 'Mutation', deleteOneDirector?: { __typename?: 'Director', id: string } | null };
+
+export type GetAddDirectorPageInfoQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAddDirectorPageInfoQuery = { __typename?: 'Query', directorEligibleOfficers: Array<{ __typename?: 'Officer', id: string, profile: { __typename?: 'Profile', firstName: string, lastName: string } }>, me: { __typename?: 'User', profile?: { __typename?: 'Profile', officer?: { __typename?: 'Officer', divisions: Array<{ __typename?: 'Division', deptName: string, id: string }> } | null } | null } };
+
+export type AddNewDirectorMutationVariables = Exact<{
+  where: DirectorWhereUniqueInput;
+  create: DirectorCreateInput;
+  update: DirectorUpdateInput;
+}>;
+
+
+export type AddNewDirectorMutation = { __typename?: 'Mutation', upsertOneDirector: { __typename?: 'Director', id: string } };
 
 export type GetDivisionDataQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -3463,6 +3624,19 @@ export type GetHomePageUserInfoQueryVariables = Exact<{
 
 
 export type GetHomePageUserInfoQuery = { __typename?: 'Query', me: { __typename?: 'User', attendedEvents: Array<{ __typename?: 'Event', description: string, location: string, summary: string, start: any }> }, profile?: { __typename?: 'Profile', firstName: string, netid: string, email: string } | null };
+
+export type GetMemberListQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetMemberListQuery = { __typename?: 'Query', profiles: Array<{ __typename?: 'Profile', id: string, firstName: string, lastName: string, isMember: boolean }> };
+
+export type ToggleMembershipStatusMutationVariables = Exact<{
+  membershipStatus: Scalars['Boolean']['input'];
+  profileId: Scalars['String']['input'];
+}>;
+
+
+export type ToggleMembershipStatusMutation = { __typename?: 'Mutation', toggleMembershipStatus: boolean };
 
 export type GetAddOfficerPageDataQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -3575,6 +3749,15 @@ export const GetOfficerStatusDocument = gql`
   me {
     isOfficer
     isDirector
+    profile {
+      officer {
+        director {
+          divisions {
+            deptName
+          }
+        }
+      }
+    }
   }
 }
     `;
@@ -3665,6 +3848,23 @@ export const CreateApplicationDocument = gql`
   }
 }
     `;
+export const GetAttendanceInfoDocument = gql`
+    query getAttendanceInfo {
+  events {
+    summary
+    description
+    location
+    start
+    end
+    profiles {
+      profile {
+        firstName
+        lastName
+      }
+    }
+  }
+}
+    `;
 export const CheckInToEventDocument = gql`
     mutation checkInToEvent($checkInData: EventCheckinInput!) {
   checkinToEvent(options: $checkInData) {
@@ -3679,6 +3879,57 @@ export const GetCheckInPageUserInfoDocument = gql`
     profile {
       id
     }
+  }
+}
+    `;
+export const GetDirectorManagementPageInfoDocument = gql`
+    query getDirectorManagementPageInfo {
+  directors {
+    id
+    divisions {
+      deptName
+    }
+    officer {
+      profile {
+        firstName
+        lastName
+      }
+    }
+  }
+}
+    `;
+export const DeleteDirectorDocument = gql`
+    mutation deleteDirector($where: DirectorWhereUniqueInput!) {
+  deleteOneDirector(where: $where) {
+    id
+  }
+}
+    `;
+export const GetAddDirectorPageInfoDocument = gql`
+    query getAddDirectorPageInfo {
+  directorEligibleOfficers {
+    id
+    profile {
+      firstName
+      lastName
+    }
+  }
+  me {
+    profile {
+      officer {
+        divisions {
+          deptName
+          id
+        }
+      }
+    }
+  }
+}
+    `;
+export const AddNewDirectorDocument = gql`
+    mutation addNewDirector($where: DirectorWhereUniqueInput!, $create: DirectorCreateInput!, $update: DirectorUpdateInput!) {
+  upsertOneDirector(where: $where, create: $create, update: $update) {
+    id
   }
 }
     `;
@@ -3838,6 +4089,24 @@ export const GetHomePageUserInfoDocument = gql`
     netid
     email
   }
+}
+    `;
+export const GetMemberListDocument = gql`
+    query getMemberList {
+  profiles {
+    id
+    firstName
+    lastName
+    isMember
+  }
+}
+    `;
+export const ToggleMembershipStatusDocument = gql`
+    mutation toggleMembershipStatus($membershipStatus: Boolean!, $profileId: String!) {
+  toggleMembershipStatus(
+    membershipStatus: $membershipStatus
+    profileId: $profileId
+  )
 }
     `;
 export const GetAddOfficerPageDataDocument = gql`
@@ -4079,11 +4348,26 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     createApplication(variables: CreateApplicationMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<CreateApplicationMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<CreateApplicationMutation>(CreateApplicationDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createApplication', 'mutation', variables);
     },
+    getAttendanceInfo(variables?: GetAttendanceInfoQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetAttendanceInfoQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetAttendanceInfoQuery>(GetAttendanceInfoDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getAttendanceInfo', 'query', variables);
+    },
     checkInToEvent(variables: CheckInToEventMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<CheckInToEventMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<CheckInToEventMutation>(CheckInToEventDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'checkInToEvent', 'mutation', variables);
     },
     getCheckInPageUserInfo(variables?: GetCheckInPageUserInfoQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetCheckInPageUserInfoQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetCheckInPageUserInfoQuery>(GetCheckInPageUserInfoDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getCheckInPageUserInfo', 'query', variables);
+    },
+    getDirectorManagementPageInfo(variables?: GetDirectorManagementPageInfoQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetDirectorManagementPageInfoQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetDirectorManagementPageInfoQuery>(GetDirectorManagementPageInfoDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getDirectorManagementPageInfo', 'query', variables);
+    },
+    deleteDirector(variables: DeleteDirectorMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<DeleteDirectorMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<DeleteDirectorMutation>(DeleteDirectorDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'deleteDirector', 'mutation', variables);
+    },
+    getAddDirectorPageInfo(variables?: GetAddDirectorPageInfoQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetAddDirectorPageInfoQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetAddDirectorPageInfoQuery>(GetAddDirectorPageInfoDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getAddDirectorPageInfo', 'query', variables);
+    },
+    addNewDirector(variables: AddNewDirectorMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<AddNewDirectorMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<AddNewDirectorMutation>(AddNewDirectorDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'addNewDirector', 'mutation', variables);
     },
     getDivisionData(variables?: GetDivisionDataQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetDivisionDataQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetDivisionDataQuery>(GetDivisionDataDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getDivisionData', 'query', variables);
@@ -4117,6 +4401,12 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     getHomePageUserInfo(variables: GetHomePageUserInfoQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetHomePageUserInfoQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetHomePageUserInfoQuery>(GetHomePageUserInfoDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getHomePageUserInfo', 'query', variables);
+    },
+    getMemberList(variables?: GetMemberListQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetMemberListQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetMemberListQuery>(GetMemberListDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getMemberList', 'query', variables);
+    },
+    toggleMembershipStatus(variables: ToggleMembershipStatusMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<ToggleMembershipStatusMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ToggleMembershipStatusMutation>(ToggleMembershipStatusDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'toggleMembershipStatus', 'mutation', variables);
     },
     getAddOfficerPageData(variables?: GetAddOfficerPageDataQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetAddOfficerPageDataQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetAddOfficerPageDataQuery>(GetAddOfficerPageDataDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getAddOfficerPageData', 'query', variables);

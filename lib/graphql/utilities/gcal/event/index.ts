@@ -1,4 +1,4 @@
-import { Event } from 'lib/generated/graphql';
+import { Event } from '@generated/type-graphql';
 import { google } from 'googleapis';
 
 const scopes = ['https://www.googleapis.com/auth/calendar'];

@@ -99,6 +99,10 @@ const Skeleton = ({ children }: any) => {
         value={{
           isDirector: !!officerStatusData?.me.isDirector,
           isOfficer: !!officerStatusData?.me.isOfficer,
+          directorOfDivisions:
+            officerStatusData?.me.profile?.officer?.director?.divisions.map(
+              (division) => division.deptName,
+            ) || [],
         }}
       >
         <Background splotches={3} />
