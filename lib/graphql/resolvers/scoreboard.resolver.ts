@@ -18,7 +18,7 @@ export default class AdditionalScoreboardResolver {
   @Query(() => [Scoreboard])
   @UseMiddleware(InjectSessionMiddleware)
   async scoreboards(@Ctx() context: TContext) {
-    const divisions = await this.divisionService.getDivisionByUserId(context.session!.id);
+    const divisions = await this.divisionService.getDivisionsOfUser(context.session!.id);
     const divisionIds = divisions.map((division) => division.id);
     return this.scoreboardService.getScoreboardByDivisions(divisionIds);
   }
