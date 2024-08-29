@@ -32,6 +32,7 @@ export default function AdminToolsPage() {
       title: 'Manage Membership Status',
       description: 'Click here to manage membership of ACM Portal users',
       onChosen: () => router.push('/admin/member/manage'),
+      directorOnly: true,
     },
     {
       title: 'Manage Scoreboard',
@@ -73,6 +74,7 @@ export default function AdminToolsPage() {
       title: 'Add participant into division',
       description: 'Click here to add participant into your division',
       onChosen: () => router.push('/admin/participant/add'),
+      directorOnly: true,
     },
   ];
   if (!officerStatusData.isOfficer) {
