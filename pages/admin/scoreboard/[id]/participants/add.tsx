@@ -43,6 +43,7 @@ export default function AddNewParticipantToScoreboardPage() {
               id: router.query.id as string,
             },
           },
+          manualDelta: 0,
         },
       });
       alert('Successfully added participant to scoreboard');
