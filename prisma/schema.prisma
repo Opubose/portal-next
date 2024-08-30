@@ -211,7 +211,7 @@ model ScoreEntry {
   participantId String      @db.ObjectId
   participant   Participant @relation(fields: [participantId], references: [id])
 
-  dummy String?
+  manualDelta Int @default(0)
 
   @@map("score_entry")
 }

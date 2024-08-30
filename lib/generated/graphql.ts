@@ -2281,6 +2281,7 @@ export type Mutation = {
   updateOneEvent?: Maybe<Event>;
   updateOneFilledApplication?: Maybe<FilledApplication>;
   updateOneOfficer?: Maybe<Officer>;
+  updateOneScoreEntry?: Maybe<ScoreEntry>;
   updateOneTypeformApplication?: Maybe<TypeformApplication>;
   upsertOneDirector: Director;
   upsertOneParticipant: Participant;
@@ -2395,6 +2396,12 @@ export type MutationUpdateOneFilledApplicationArgs = {
 export type MutationUpdateOneOfficerArgs = {
   data: OfficerUpdateInput;
   where: OfficerWhereUniqueInput;
+};
+
+
+export type MutationUpdateOneScoreEntryArgs = {
+  data: ScoreEntryUpdateInput;
+  where: ScoreEntryWhereUniqueInput;
 };
 
 
@@ -3922,9 +3929,9 @@ export type RolesOnUserWhereUniqueInput = {
 
 export type ScoreEntry = {
   __typename?: 'ScoreEntry';
-  dummy?: Maybe<Scalars['String']['output']>;
   eventClaims: Array<Scalars['String']['output']>;
   id: Scalars['String']['output'];
+  manualDelta: Scalars['Int']['output'];
   participant: Participant;
   participantId: Scalars['String']['output'];
   scoreboard: Scoreboard;
@@ -3933,17 +3940,17 @@ export type ScoreEntry = {
 };
 
 export type ScoreEntryCreateInput = {
-  dummy?: InputMaybe<Scalars['String']['input']>;
   eventClaims?: InputMaybe<ScoreEntryCreateeventClaimsInput>;
   id?: InputMaybe<Scalars['String']['input']>;
+  manualDelta?: InputMaybe<Scalars['Int']['input']>;
   participant: ParticipantCreateNestedOneWithoutScoreEntryInput;
   scoreboard: ScoreboardCreateNestedOneWithoutScoreEntriesInput;
 };
 
 export type ScoreEntryCreateManyParticipantInput = {
-  dummy?: InputMaybe<Scalars['String']['input']>;
   eventClaims?: InputMaybe<ScoreEntryCreateeventClaimsInput>;
   id?: InputMaybe<Scalars['String']['input']>;
+  manualDelta?: InputMaybe<Scalars['Int']['input']>;
   scoreboardId: Scalars['String']['input'];
 };
 
@@ -3952,9 +3959,9 @@ export type ScoreEntryCreateManyParticipantInputEnvelope = {
 };
 
 export type ScoreEntryCreateManyScoreboardInput = {
-  dummy?: InputMaybe<Scalars['String']['input']>;
   eventClaims?: InputMaybe<ScoreEntryCreateeventClaimsInput>;
   id?: InputMaybe<Scalars['String']['input']>;
+  manualDelta?: InputMaybe<Scalars['Int']['input']>;
   participantId: Scalars['String']['input'];
 };
 
@@ -3987,16 +3994,16 @@ export type ScoreEntryCreateOrConnectWithoutScoreboardInput = {
 };
 
 export type ScoreEntryCreateWithoutParticipantInput = {
-  dummy?: InputMaybe<Scalars['String']['input']>;
   eventClaims?: InputMaybe<ScoreEntryCreateeventClaimsInput>;
   id?: InputMaybe<Scalars['String']['input']>;
+  manualDelta?: InputMaybe<Scalars['Int']['input']>;
   scoreboard: ScoreboardCreateNestedOneWithoutScoreEntriesInput;
 };
 
 export type ScoreEntryCreateWithoutScoreboardInput = {
-  dummy?: InputMaybe<Scalars['String']['input']>;
   eventClaims?: InputMaybe<ScoreEntryCreateeventClaimsInput>;
   id?: InputMaybe<Scalars['String']['input']>;
+  manualDelta?: InputMaybe<Scalars['Int']['input']>;
   participant: ParticipantCreateNestedOneWithoutScoreEntryInput;
 };
 
@@ -4015,9 +4022,9 @@ export type ScoreEntryOrderByRelationAggregateInput = {
 };
 
 export type ScoreEntryOrderByWithRelationInput = {
-  dummy?: InputMaybe<SortOrder>;
   eventClaims?: InputMaybe<SortOrder>;
   id?: InputMaybe<SortOrder>;
+  manualDelta?: InputMaybe<SortOrder>;
   participant?: InputMaybe<ParticipantOrderByWithRelationInput>;
   participantId?: InputMaybe<SortOrder>;
   scoreboard?: InputMaybe<ScoreboardOrderByWithRelationInput>;
@@ -4025,9 +4032,9 @@ export type ScoreEntryOrderByWithRelationInput = {
 };
 
 export enum ScoreEntryScalarFieldEnum {
-  Dummy = 'dummy',
   EventClaims = 'eventClaims',
   Id = 'id',
+  ManualDelta = 'manualDelta',
   ParticipantId = 'participantId',
   ScoreboardId = 'scoreboardId'
 }
@@ -4036,16 +4043,23 @@ export type ScoreEntryScalarWhereInput = {
   AND?: InputMaybe<Array<ScoreEntryScalarWhereInput>>;
   NOT?: InputMaybe<Array<ScoreEntryScalarWhereInput>>;
   OR?: InputMaybe<Array<ScoreEntryScalarWhereInput>>;
-  dummy?: InputMaybe<StringNullableFilter>;
   eventClaims?: InputMaybe<StringNullableListFilter>;
   id?: InputMaybe<StringFilter>;
+  manualDelta?: InputMaybe<IntFilter>;
   participantId?: InputMaybe<StringFilter>;
   scoreboardId?: InputMaybe<StringFilter>;
 };
 
-export type ScoreEntryUpdateManyMutationInput = {
-  dummy?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+export type ScoreEntryUpdateInput = {
   eventClaims?: InputMaybe<ScoreEntryUpdateeventClaimsInput>;
+  manualDelta?: InputMaybe<IntFieldUpdateOperationsInput>;
+  participant?: InputMaybe<ParticipantUpdateOneRequiredWithoutScoreEntryNestedInput>;
+  scoreboard?: InputMaybe<ScoreboardUpdateOneRequiredWithoutScoreEntriesNestedInput>;
+};
+
+export type ScoreEntryUpdateManyMutationInput = {
+  eventClaims?: InputMaybe<ScoreEntryUpdateeventClaimsInput>;
+  manualDelta?: InputMaybe<IntFieldUpdateOperationsInput>;
 };
 
 export type ScoreEntryUpdateManyWithWhereWithoutParticipantInput = {
@@ -4097,14 +4111,14 @@ export type ScoreEntryUpdateWithWhereUniqueWithoutScoreboardInput = {
 };
 
 export type ScoreEntryUpdateWithoutParticipantInput = {
-  dummy?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   eventClaims?: InputMaybe<ScoreEntryUpdateeventClaimsInput>;
+  manualDelta?: InputMaybe<IntFieldUpdateOperationsInput>;
   scoreboard?: InputMaybe<ScoreboardUpdateOneRequiredWithoutScoreEntriesNestedInput>;
 };
 
 export type ScoreEntryUpdateWithoutScoreboardInput = {
-  dummy?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   eventClaims?: InputMaybe<ScoreEntryUpdateeventClaimsInput>;
+  manualDelta?: InputMaybe<IntFieldUpdateOperationsInput>;
   participant?: InputMaybe<ParticipantUpdateOneRequiredWithoutScoreEntryNestedInput>;
 };
 
@@ -4129,9 +4143,9 @@ export type ScoreEntryWhereInput = {
   AND?: InputMaybe<Array<ScoreEntryWhereInput>>;
   NOT?: InputMaybe<Array<ScoreEntryWhereInput>>;
   OR?: InputMaybe<Array<ScoreEntryWhereInput>>;
-  dummy?: InputMaybe<StringNullableFilter>;
   eventClaims?: InputMaybe<StringNullableListFilter>;
   id?: InputMaybe<StringFilter>;
+  manualDelta?: InputMaybe<IntFilter>;
   participant?: InputMaybe<ParticipantRelationFilter>;
   participantId?: InputMaybe<StringFilter>;
   scoreboard?: InputMaybe<ScoreboardRelationFilter>;
@@ -4142,9 +4156,9 @@ export type ScoreEntryWhereUniqueInput = {
   AND?: InputMaybe<Array<ScoreEntryWhereInput>>;
   NOT?: InputMaybe<Array<ScoreEntryWhereInput>>;
   OR?: InputMaybe<Array<ScoreEntryWhereInput>>;
-  dummy?: InputMaybe<StringNullableFilter>;
   eventClaims?: InputMaybe<StringNullableListFilter>;
   id?: InputMaybe<Scalars['String']['input']>;
+  manualDelta?: InputMaybe<IntFilter>;
   participant?: InputMaybe<ParticipantRelationFilter>;
   participantId?: InputMaybe<StringFilter>;
   scoreboard?: InputMaybe<ScoreboardRelationFilter>;
@@ -5364,6 +5378,14 @@ export type GetResumePageUserInfoQueryVariables = Exact<{
 
 export type GetResumePageUserInfoQuery = { __typename?: 'Query', me: { __typename?: 'User', resumeFilename: string }, profile?: { __typename?: 'Profile', firstName: string, netid: string } | null };
 
+export type ManualUpdateScoreEntryMutationVariables = Exact<{
+  data: ScoreEntryUpdateInput;
+  where: ScoreEntryWhereUniqueInput;
+}>;
+
+
+export type ManualUpdateScoreEntryMutation = { __typename?: 'Mutation', updateOneScoreEntry?: { __typename?: 'ScoreEntry', manualDelta: number } | null };
+
 export type GetScoreboardsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -5989,6 +6011,13 @@ export const GetResumePageUserInfoDocument = gql`
   }
 }
     `;
+export const ManualUpdateScoreEntryDocument = gql`
+    mutation manualUpdateScoreEntry($data: ScoreEntryUpdateInput!, $where: ScoreEntryWhereUniqueInput!) {
+  updateOneScoreEntry(data: $data, where: $where) {
+    manualDelta
+  }
+}
+    `;
 export const GetScoreboardsDocument = gql`
     query getScoreboards {
   scoreboards {
@@ -6352,6 +6381,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     getResumePageUserInfo(variables: GetResumePageUserInfoQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetResumePageUserInfoQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetResumePageUserInfoQuery>(GetResumePageUserInfoDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getResumePageUserInfo', 'query', variables);
+    },
+    manualUpdateScoreEntry(variables: ManualUpdateScoreEntryMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<ManualUpdateScoreEntryMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ManualUpdateScoreEntryMutation>(ManualUpdateScoreEntryDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'manualUpdateScoreEntry', 'mutation', variables);
     },
     getScoreboards(variables?: GetScoreboardsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetScoreboardsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetScoreboardsQuery>(GetScoreboardsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getScoreboards', 'query', variables);

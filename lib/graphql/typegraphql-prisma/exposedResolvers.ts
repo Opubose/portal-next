@@ -47,6 +47,7 @@ import {
   DivisionRelationsResolver,
   CreateOneScoreEntryResolver,
   DeleteOneScoreEntryResolver,
+  UpdateOneScoreEntryResolver,
 } from '@generated/type-graphql';
 
 export const exposedResolvers: NonEmptyArray<Function> = [
@@ -99,4 +100,5 @@ export const exposedResolvers: NonEmptyArray<Function> = [
   FindManyDivisionResolver,
   FindManyEventResolver,
   UpdateOneOfficerResolver,
+  UpdateOneScoreEntryResolver
 ];

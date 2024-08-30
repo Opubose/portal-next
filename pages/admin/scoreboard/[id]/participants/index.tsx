@@ -33,6 +33,24 @@ export default function ScoreboardParticipantsManagementPage() {
       console.error(error);
     }
   };
+  const updateUserScoreHandler = async (participantId: string, scoreDelta: number) => {
+    try {
+      await gqlQueries.manualUpdateScoreEntry({
+        data: {
+          manualDelta: {
+            increment: scoreDelta,
+          },
+        },
+        where: {
+          id: participantId,
+        },
+      });
+      alert('Score successfully updated');
+    } catch (err) {
+      alert('Error updating user score. Please try again...');
+      console.error(err);
+    }
+  };
   if (isLoading || status === 'loading') {
     return <Loading />;
   }
@@ -51,6 +69,7 @@ export default function ScoreboardParticipantsManagementPage() {
           netid: entry.participant.profile.netid,
           score: entry.totalScore,
         }))}
+        updateScoreForUserHandler={updateUserScoreHandler}
       />
       <div className="flex gap-x-3">
         <Button onClick={() => router.push(`/admin/scoreboard/${router.query.id}/`)}>

@@ -18,6 +18,6 @@ export default class AdditionalScoreEntryResolver {
         scoreboardId: scoreEntry.scoreboardId,
       },
     });
-    return rules.reduce((acc: number, curr) => acc + curr.scoreValue, 0);
+    return rules.reduce((acc: number, curr) => acc + curr.scoreValue, scoreEntry.manualDelta);
   }
 }

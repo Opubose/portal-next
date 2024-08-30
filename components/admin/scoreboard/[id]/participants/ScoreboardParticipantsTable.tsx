@@ -7,6 +7,7 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material';
+import ManualUserScoreUpdateDialog from './ManualUserScoreUpdateDialog';
 
 interface ScoreboardParticipantsTableProps {
   participants: Array<{
@@ -17,11 +18,13 @@ interface ScoreboardParticipantsTableProps {
     score: number;
   }>;
   removeUserFromScoreboardHandler: (participantId: string) => Promise<void>;
+  updateScoreForUserHandler: (participantId: string, scoreDelta: number) => Promise<void>;
 }
 
 export default function ScoreboardParticipantsTable({
   participants,
   removeUserFromScoreboardHandler,
+  updateScoreForUserHandler,
 }: ScoreboardParticipantsTableProps) {
   if (participants.length === 0)
     return (
@@ -64,14 +67,20 @@ export default function ScoreboardParticipantsTable({
               <TableCell>{participant.netid}</TableCell>
               <TableCell>{participant.score}</TableCell>
               <TableCell>
-                <button
-                  className="bg-red-400 rounded-lg p-3 text-white hover:bg-red-600"
-                  onClick={async () => {
-                    await removeUserFromScoreboardHandler(participant.participantId);
-                  }}
-                >
-                  remove this user from the scoreboard
-                </button>
+                <div className="flex gap-x-3">
+                  <button
+                    className="bg-red-400 rounded-lg p-3 text-white hover:bg-red-600"
+                    onClick={async () => {
+                      await removeUserFromScoreboardHandler(participant.participantId);
+                    }}
+                  >
+                    remove this user from the scoreboard
+                  </button>
+                  <ManualUserScoreUpdateDialog
+                    participant={participant}
+                    onConfirmScoreUpdate={updateScoreForUserHandler}
+                  />
+                </div>
               </TableCell>
             </TableRow>
           ))}

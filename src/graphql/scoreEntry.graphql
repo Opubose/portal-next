@@ -1,0 +1,5 @@
+mutation manualUpdateScoreEntry($data: ScoreEntryUpdateInput!, $where: ScoreEntryWhereUniqueInput!) {
+  updateOneScoreEntry(data: $data, where: $where) {
+    manualDelta
+  }
+}
