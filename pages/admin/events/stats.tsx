@@ -81,7 +81,9 @@ export default function EventStatsPage() {
         <div className="col-start-1 row-start-1 row-span-7 col-span-1">
           <EventListView
             onChangeSearchQuery={debounceSearchQuery}
-            events={filteredEvents}
+            events={filteredEvents.sort(
+              (a, b) => new Date(b.start).getTime() - new Date(a.start).getTime(),
+            )}
             onEventClick={(e) => setCurrentEvent(e)}
           />
         </div>
