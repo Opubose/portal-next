@@ -11,6 +11,15 @@ import { Button } from 'components/ui/button';
 import { Label } from 'components/ui/label';
 import { Input } from 'components/ui/input';
 import { useState } from 'react';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from 'components/ui/select';
 
 interface ManualUserScoreUpdateDialogProps {
   participant: {
@@ -28,6 +37,7 @@ export default function ManualUserScoreUpdateDialog({
   onConfirmScoreUpdate,
 }: ManualUserScoreUpdateDialogProps) {
   const [delta, setDelta] = useState(0);
+  const [deltaType, setDeltaType] = useState<'inc' | 'dec'>('inc');
   return (
     <Dialog>
       <DialogTrigger className="bg-green-400 rounded-lg p-3 text-white hover:bg-green-600">
@@ -40,10 +50,29 @@ export default function ManualUserScoreUpdateDialog({
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
+            <div className="text-right text-sm">Increase/Decrease</div>
+            <Select
+              onValueChange={(value) => setDeltaType(value as typeof deltaType)}
+              defaultValue={deltaType}
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Increase / Decrease" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Update type</SelectLabel>
+                  <SelectItem value="inc">Increase score by</SelectItem>
+                  <SelectItem value="dec">Decrease score by</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="username" className="text-right">
               Score
             </Label>
             <Input
+              min={0}
               value={delta}
               onChange={(e) => setDelta(parseInt(e.target.value))}
               type="number"
@@ -54,7 +83,10 @@ export default function ManualUserScoreUpdateDialog({
         <DialogFooter>
           <Button
             onClick={async () => {
-              await onConfirmScoreUpdate(participant.participantId, delta);
+              await onConfirmScoreUpdate(
+                participant.participantId,
+                deltaType === 'inc' ? delta : -delta,
+              );
             }}
           >
             Save changes
