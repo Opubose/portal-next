@@ -1,0 +1,117 @@
+query getScoreboards {
+  scoreboards {
+    id
+    scoreboardName
+    division {
+      id
+      deptName
+    }
+  }
+}
+
+query getCreateScoreboardPageData {
+  me {
+    profile {
+      officer {
+        divisions {
+          id
+          deptName
+        }
+      }
+    }
+  }
+  eventCategories {
+    eventCategoryName
+    id
+  }
+}
+
+mutation createScoreboard($data: ScoreboardCreateInput!) {
+  createOneScoreboard(data: $data) {
+    scoreboardName
+  }
+}
+
+query getScoreboardByIdPageData($where: ScoreboardWhereUniqueInput!) {
+  me {
+    profile {
+      officer {
+        divisions {
+          id
+          deptName
+        }
+      }
+    }
+  }
+  scoreboard(where: $where) {
+    scoreboardName
+    scoreRules {
+      scoreValue
+      id
+      eventCategory {
+        id
+      }
+    }
+    division {
+      id
+    }
+  }
+  eventCategories {
+    eventCategoryName
+    id
+  }
+}
+
+query getScoreboardParticipantsByIdPageData($where: ScoreboardWhereUniqueInput!) {
+  scoreboard(where: $where) {
+    scoreboardName
+    scoreEntries {
+      id
+      participant {
+        profile {
+          firstName
+          lastName
+          netid
+        }
+      }
+      totalScore
+    }
+  }
+}
+
+query getScoreboardEligibleParticipants($where: ScoreboardWhereUniqueInput!) {
+  scoreboard(where: $where) {
+    scoreboardName
+    division {
+      participants {
+        id
+        profile {
+          firstName
+          lastName
+          netid
+        }
+      }
+    }
+  }
+}
+
+mutation addParticipantToScoreboard($data: ScoreEntryCreateInput!) {
+  createOneScoreEntry(data: $data) {
+    participant {
+      profile {
+        firstName
+        lastName
+      }
+    }
+  }
+}
+
+mutation resetScoreboard($data: ScoreboardResetInput!) {
+  resetScoreboard(data: $data)
+}
+
+mutation removeParticipantFromScoreboard($where: ScoreEntryWhereUniqueInput!) {
+  deleteOneScoreEntry(where: $where) {
+    id
+  }
+}

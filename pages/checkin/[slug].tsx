@@ -33,6 +33,9 @@ export default function CheckinPage() {
 
   const [queryError, setQueryError] = useState<GraphQLError | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [pointClaims, setPointClaims] = useState<
+    Array<{ scoreboardName: string; scoreValue: number }>
+  >([]);
 
   useEffect(() => {
     if (isLoading) return;
@@ -52,12 +55,18 @@ export default function CheckinPage() {
       return;
     }
 
-    gqlQueries.checkInToEvent({
-      checkInData: {
-        eventId: slug as string,
-        profileId: data!.me.profile.id,
-      },
-    });
+    gqlQueries
+      .checkInToEvent({
+        checkInData: {
+          eventId: slug as string,
+          profileId: data!.me.profile.id,
+        },
+      })
+      .then((res) => {
+        if (res.checkinToEvent!.points) {
+          setPointClaims(res.checkinToEvent!.points);
+        }
+      });
   }, [isLoading, error, data]);
 
   if (isLoading || status == 'loading') return <Loading />;
@@ -78,6 +87,12 @@ export default function CheckinPage() {
   return (
     <ViewWrapper router={router}>
       <SuccessfulComponent message="Check-in successful" />
+      {pointClaims.map((claim) => (
+        <SuccessfulComponent
+          key={claim.scoreboardName}
+          message={`You gained ${claim.scoreValue} points in ${claim.scoreboardName}`}
+        />
+      ))}
     </ViewWrapper>
   );
 }

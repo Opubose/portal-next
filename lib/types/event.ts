@@ -10,4 +10,10 @@ export interface ActiveEventResult extends EventResult {
   description: string;
   url: string;
   isPublic: boolean;
+  category?:
+    | {
+        id: string;
+      }
+    | null
+    | undefined;
 }

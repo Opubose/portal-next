@@ -26,6 +26,8 @@ import OfficerResolver from 'lib/graphql/resolvers/officer.resolver';
 import AdditionalProfileResolver from 'lib/graphql/resolvers/AdditionalProfileResolver.resolver';
 import { OfficerByProfileIdDataLoader } from 'lib/graphql/dataloader/officer.dataloader';
 import { EventCountByProfileIdDataLoader } from 'lib/graphql/dataloader/event.dataloader';
+import AdditionalScoreboardResolver from 'lib/graphql/resolvers/scoreboard.resolver';
+import AdditionalScoreEntryResolver from 'lib/graphql/resolvers/scoreEntry.resolver';
 
 if (process.env.NODE_ENV !== 'development') {
   applyResolversEnhanceMap(resolversEnhanceMap);
@@ -43,6 +45,8 @@ const schema = buildSchemaSync({
     OldEventResolver,
     OfficerResolver,
     SpreadsheetResolver,
+    AdditionalScoreboardResolver,
+    AdditionalScoreEntryResolver,
   ],
   container: {
     get: (someClass) => container.resolve(someClass),

@@ -10,10 +10,22 @@ export class EventCheckinInput {
 }
 
 @ObjectType()
+class PointClaimResult {
+  @Field()
+  public scoreboardName!: string;
+
+  @Field()
+  public scoreValue!: number;
+}
+
+@ObjectType()
 export class EventCheckin {
   @Field()
   public eventId!: string;
 
   @Field()
   public profileId!: string;
+
+  @Field(() => [PointClaimResult], { nullable: true })
+  public points?: PointClaimResult[];
 }

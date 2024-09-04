@@ -47,6 +47,13 @@ export default function AdminToolsPage() {
       directorOnly: true,
       devDirectorOrExecOnly: true,
     },
+    {
+      title: 'Manage Scoreboard',
+      description: 'Manage Scoreboard owned by your division',
+      onChosen: () => router.push('/admin/scoreboard/'),
+      directorOnly: true,
+      devDirectorOrExecOnly: false,
+    },
     // {
     //   title: 'Create Division Application',
     //   description: 'Click here to create new application for your division',
@@ -79,6 +86,13 @@ export default function AdminToolsPage() {
       description: 'Click here to edit recent event data',
       onChosen: () => router.push('/admin/events/edit'),
       directorOnly: false,
+      devDirectorOrExecOnly: false,
+    },
+    {
+      title: 'Add participant into division',
+      description: 'Click here to add participant into your division',
+      onChosen: () => router.push('/admin/participant/add'),
+      directorOnly: true,
       devDirectorOrExecOnly: false,
     },
   ];

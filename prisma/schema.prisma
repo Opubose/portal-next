@@ -1,225 +1,299 @@
 datasource db {
-    provider = "mongodb"
-    url      = env("MONGODB_URI")
+  provider = "mongodb"
+  url      = env("MONGODB_URI")
 }
 
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 generator typegraphql {
-    provider = "typegraphql-prisma"
+  provider = "typegraphql-prisma"
 }
 
 model Account {
-    id                String  @id @default(auto()) @map("_id") @db.ObjectId
-    userId            String  @db.ObjectId
-    type              String
-    provider          String
-    providerAccountId String
-    refresh_token     String? @db.String
-    access_token      String? @db.String
-    expires_at        Int?
-    token_type        String?
-    scope             String?
-    id_token          String? @db.String
-    session_state     String?
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
 
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@unique([provider, providerAccountId])
-    @@map("accounts")
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
 }
 
 model EventReservation {
-    id        String  @id @default(auto()) @map("_id") @db.ObjectId
-    profile   Profile @relation(fields: [profileId], references: [id])
-    profileId String  @db.ObjectId
-    event     Event   @relation(fields: [eventId], references: [id])
-    eventId   String  @db.ObjectId
-    status    String
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  profile   Profile @relation(fields: [profileId], references: [id])
+  profileId String  @db.ObjectId
+  event     Event   @relation(fields: [eventId], references: [id])
+  eventId   String  @db.ObjectId
+  status    String
 
-    @@unique([profileId, eventId])
-    @@map("event_reservations")
+  @@unique([profileId, eventId])
+  @@map("event_reservations")
 }
 
 model Session {
-    id           String   @id @default(auto()) @map("_id") @db.ObjectId
-    sessionToken String   @unique
-    userId       String   @db.ObjectId
-    expires      DateTime
-    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String   @unique
+  userId       String   @db.ObjectId
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@map("sessions")
+  @@map("sessions")
 }
 
 model Role {
-    id       String @id @default(auto()) @map("_id") @db.ObjectId
-    roleName String
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  roleName String
 
-    RolesOnUser RolesOnUser[]
+  RolesOnUser RolesOnUser[]
 
-    @@map("roles")
+  @@map("roles")
 }
 
 model RolesOnUser {
-    id        String   @id @default(auto()) @map("_id") @db.ObjectId
-    role      Role     @relation(fields: [roleId], references: [id])
-    roleId    String   @db.ObjectId
-    user      User     @relation(fields: [userId], references: [id])
-    userId    String   @db.ObjectId
-    createdAt DateTime @default(now())
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  role      Role     @relation(fields: [roleId], references: [id])
+  roleId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @db.ObjectId
+  createdAt DateTime @default(now())
 
-    @@unique([userId, roleId])
+  @@unique([userId, roleId])
 }
 
 model User {
-    id            String        @id @default(auto()) @map("_id") @db.ObjectId
-    name          String?
-    email         String?       @unique
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
-    profile       Profile?
-    roles         RolesOnUser[]
+  id            String        @id @default(auto()) @map("_id") @db.ObjectId
+  name          String?
+  email         String?       @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  profile       Profile?
+  roles         RolesOnUser[]
 
-    @@map("users")
+  @@map("users")
 }
 
 model VerificationToken {
-    id         String   @id @default(auto()) @map("_id") @db.ObjectId
-    identifier String
-    token      String   @unique
-    expires    DateTime
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  identifier String
+  token      String   @unique
+  expires    DateTime
 
-    @@unique([identifier, token])
+  @@unique([identifier, token])
 }
 
 model Profile {
-    id               String    @id @default(auto()) @map("_id") @db.ObjectId
-    firstName        String
-    lastName         String
-    email            String    
-    netid            String    @unique
-    classStanding    String
-    major            String
-    utdStudent       Boolean
-    roles            String[]
-    membershipStatus Boolean
-    membershipTS     DateTime?
-    resume           Boolean
-    resumeTS         DateTime?
+  id               String    @id @default(auto()) @map("_id") @db.ObjectId
+  firstName        String
+  lastName         String
+  email            String
+  netid            String    @unique
+  classStanding    String
+  major            String
+  utdStudent       Boolean
+  roles            String[]
+  membershipStatus Boolean
+  membershipTS     DateTime?
+  resume           Boolean
+  resumeTS         DateTime?
 
-    user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 
-    userId String             @unique @db.ObjectId
-    events EventReservation[]
+  userId String             @unique @db.ObjectId
+  events EventReservation[]
 
-    officer Officer?
+  officer Officer?
 
-    fillApplications FilledApplication[]
+  fillApplications FilledApplication[]
+  participant      Participant?
 }
 
 model Event {
-    id          String             @id @default(auto()) @map("_id") @db.ObjectId
-    summary     String
-    description String
-    url         String
-    location    String
-    isPublic    Boolean
-    start       DateTime
-    end         DateTime
-    profiles    EventReservation[]
+  id              String             @id @default(auto()) @map("_id") @db.ObjectId
+  summary         String
+  description     String
+  url             String
+  location        String
+  isPublic        Boolean
+  start           DateTime
+  end             DateTime
+  profiles        EventReservation[]
+  category        EventCategory?     @relation(fields: [eventCategoryId], references: [id])
+  eventCategoryId String?            @db.ObjectId
 
-    @@map("events")
+  @@map("events")
 }
 
 model TypeformApplication {
-    id                  String  @id @default(auto()) @map("_id") @db.ObjectId
-    active              Boolean
-    description         String
-    endpoint            String
-    externalResourceUrl String
-    typeformId          String
-    typeformName        String
-    division            String
+  id                  String  @id @default(auto()) @map("_id") @db.ObjectId
+  active              Boolean
+  description         String
+  endpoint            String
+  externalResourceUrl String
+  typeformId          String
+  typeformName        String
+  division            String
 
-    @@map("typeform_applications")
+  @@map("typeform_applications")
 }
 
 model VanityLink {
-    id           String @id @default(auto()) @map("_id") @db.ObjectId
-    originalUrl  String
-    vanityDomain String
-    slashtag     String
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  originalUrl  String
+  vanityDomain String
+  slashtag     String
 }
 
 model Application {
-    id                  String   @id @default(auto()) @map("_id") @db.ObjectId
-    name                String 
-    externalResourceUrl String
-    description         String
-    createdAt           DateTime
-    expireDate          DateTime    
-    questions        String[]
-    
-    fillApplications FilledApplication[]
+  id                  String   @id @default(auto()) @map("_id") @db.ObjectId
+  name                String
+  externalResourceUrl String
+  description         String
+  createdAt           DateTime
+  expireDate          DateTime
+  questions           String[]
 
-    divisionId String   @db.ObjectId
-    division   Division @relation(fields: [divisionId], references: [id])
+  fillApplications FilledApplication[]
 
-    @@map("applications")
+  divisionId String   @db.ObjectId
+  division   Division @relation(fields: [divisionId], references: [id])
+
+  @@map("applications")
+}
+
+model EventCategory {
+  id                String @id @default(auto()) @map("_id") @db.ObjectId
+  eventCategoryName String
+
+  events    Event[]
+  scoreRule ScoreRule[]
+
+  @@map("event_category")
+}
+
+model Participant {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  divisionIds String[]   @db.ObjectId
+  divisions   Division[] @relation(fields: [divisionIds], references: [id])
+
+  profileId String  @unique @db.ObjectId
+  profile   Profile @relation(fields: [profileId], references: [id])
+
+  dummy      String?
+  scoreEntry ScoreEntry[]
+
+  @@map("participants")
+}
+
+model ScoreEntry {
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  scoreboard   Scoreboard @relation(fields: [scoreboardId], references: [id])
+  scoreboardId String     @db.ObjectId
+
+  // Store list of event categories
+  eventClaims String[]
+
+  participantId String      @db.ObjectId
+  participant   Participant @relation(fields: [participantId], references: [id])
+
+  manualDelta Int @default(0)
+
+  @@map("score_entry")
+}
+
+model ScoreRule {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  eventCategoryId String        @db.ObjectId
+  eventCategory   EventCategory @relation(fields: [eventCategoryId], references: [id])
+
+  scoreboard   Scoreboard @relation(fields: [scoreboardId], references: [id])
+  scoreboardId String     @db.ObjectId
+
+  scoreValue Int
+
+  maxClaimCount Int?
+
+  @@map("score_rules")
+}
+
+model Scoreboard {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  division       Division     @relation(fields: [divisionId], references: [id])
+  divisionId     String       @db.ObjectId
+  scoreboardName String
+  scoreEntries   ScoreEntry[]
+  scoreRules     ScoreRule[]
+
+  @@map("scoreboard")
 }
 
 model Division {
-    id       String @id @default(auto()) @map("_id") @db.ObjectId
-    deptName String
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  deptName String
 
-    officerIds String[]  @db.ObjectId
-    officers   Officer[] @relation( fields: [officerIds], references: [id] )
+  officerIds String[]  @db.ObjectId
+  officers   Officer[] @relation(fields: [officerIds], references: [id])
 
-    directorIds String[]   @db.ObjectId
-    directors   Director[] @relation( fields:[directorIds], references:[id] )
+  directorIds String[]   @db.ObjectId
+  directors   Director[] @relation(fields: [directorIds], references: [id])
 
-    applications Application[]
+  applications Application[]
+  scoreboard   Scoreboard[]
 
-    @@map("divisions")
+  participantIds String[]      @db.ObjectId
+  participants   Participant[] @relation(fields: [participantIds], references: [id])
+
+  @@map("divisions")
 }
 
 model Officer {
-    id String @id @default(auto()) @map("_id") @db.ObjectId
+  id String @id @default(auto()) @map("_id") @db.ObjectId
 
-    profile   Profile @relation(fields: [profileId], references: [id])
-    profileId String  @unique @db.ObjectId
+  profile   Profile @relation(fields: [profileId], references: [id])
+  profileId String  @unique @db.ObjectId
 
-    divisionIds String[]   @db.ObjectId
-    divisions   Division[] @relation(fields: [divisionIds], references: [id])
+  divisionIds String[]   @db.ObjectId
+  divisions   Division[] @relation(fields: [divisionIds], references: [id])
 
-    director Director?
-    dummy String?
+  director Director?
+  dummy    String?
 
-    @@map("officers")
+  @@map("officers")
 }
 
-model Director { 
-    id String @id @default(auto()) @map("_id") @db.ObjectId
+model Director {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
 
-    officerId String @unique @db.ObjectId
-    officer Officer? @relation(fields: [officerId], references: [id] )
- 
+  officerId String   @unique @db.ObjectId
+  officer   Officer? @relation(fields: [officerId], references: [id])
 
-    divisionIds String[] @db.ObjectId
-    divisions   Division[] @relation( fields: [divisionIds], references: [id] )
+  divisionIds String[]   @db.ObjectId
+  divisions   Division[] @relation(fields: [divisionIds], references: [id])
 
-    dummy String?
+  dummy String?
 
-    @@map("directors")
+  @@map("directors")
 }
 
 // if explicit m-to-n relations are needed:
 // model OffDeptJunction {
-//    officerId           String  
+//    officerId           String
 //    officer             Officer    @relation(fields: [officerId], references: [id])
 
 //    deptId              String
@@ -229,32 +303,32 @@ model Director {
 //}
 
 model FilledApplication {
-    id String @id @default(auto()) @map("_id") @db.ObjectId
+  id String @id @default(auto()) @map("_id") @db.ObjectId
 
-    profileId String  @db.ObjectId
-    profile   Profile @relation(fields: [profileId], references: [id])
+  profileId String  @db.ObjectId
+  profile   Profile @relation(fields: [profileId], references: [id])
 
-    appId String      @db.ObjectId
-    app   Application @relation(fields: [appId], references: [id])
+  appId String      @db.ObjectId
+  app   Application @relation(fields: [appId], references: [id])
 
-    responses String[]
-    status    String
-    score     Int?
-    first     String
-    second    String
-    third     String
-    notes     String?
+  responses String[]
+  status    String
+  score     Int?
+  first     String
+  second    String
+  third     String
+  notes     String?
 
-    interviewLink String?
-    //@@id([userId, formId, deptId])      @map("_id") @db.ObjectId
+  interviewLink String?
+  //@@id([userId, formId, deptId])      @map("_id") @db.ObjectId
 
-    @@map("filled_apps")
+  @@map("filled_apps")
 }
 
 model TypeformSubmission {
-    id String @id @default(auto()) @map("_id") @db.ObjectId
-    email String
-    typeformName String
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  email        String
+  typeformName String
 
-    @@map("typeform_submission")
+  @@map("typeform_submission")
 }
