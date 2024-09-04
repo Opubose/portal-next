@@ -52,6 +52,7 @@ export default function AdminToolsPage() {
       description: 'Manage Scoreboard owned by your division',
       onChosen: () => router.push('/admin/scoreboard/'),
       directorOnly: true,
+      devDirectorOrExecOnly: false,
     },
     // {
     //   title: 'Create Division Application',
@@ -92,6 +93,7 @@ export default function AdminToolsPage() {
       description: 'Click here to add participant into your division',
       onChosen: () => router.push('/admin/participant/add'),
       directorOnly: true,
+      devDirectorOrExecOnly: false,
     },
   ];
   const isDevDirectorOrExec = () => {
